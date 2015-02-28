@@ -1,25 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-TERMS = (
-    ('Fall', 'Fall'),
-    ('Spring', 'Spring'),
-    #some less common ones
-    ('Winter', 'Winter'),
-    ('Summer', 'Summer'),
-)
-
-DAYS_OF_WEEK = (
-    ('Sunday', 'Sunday'),
-    ('Monday', 'Monday'),
-    ('Tuesday', 'Tuesday'),
-    ('Wednesday', 'Wednesday'),
-    ('Thursday', 'Thursday'),
-    ('Friday', 'Friday'),
-    ('Saturday', 'Saturday')
-)
-
-
 class Department(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
 
@@ -44,8 +25,20 @@ class Course_Code(models.Model):
 
 
 class Term(models.Model):
+    #Term Choice Definitions
+    FALL = "FL"
+    SPRING = "SP"
+    WINTER = "WT"
+    SUMMER = "SM"
+    TERM_CHOICES = (
+        (FALL, 'Fall'),
+        (SPRING, 'Spring'),
+        #some less common ones
+        (WINTER, 'Winter'),
+        (SUMMER, 'Summer'),
+    )
     # TODO add comparator
-    season = models.CharField(max_length=10, choices=TERMS)
+    season = models.CharField(max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField()
 
     def __str__(self):
@@ -88,11 +81,28 @@ class Room(models.Model):
 
 
 class Course_Session(models.Model):
+    #Days of the week definitions
+    SUNDAY = "SUN"
+    MONDAY = "MON"
+    TUESDAY = "TUES"
+    WEDNESDAY = "WED"
+    THURSDAY = "THURS"
+    FRIDAY = "FRI"
+    SATURDAY = "SAT"
+    DAYS_OF_WEEK_CHOICES = (
+        (SUNDAY, 'Sunday'),
+        (MONDAY, 'Monday'),
+        (TUESDAY, 'Tuesday'),
+        (WEDNESDAY, 'Wednesday'),
+        (THURSDAY, 'Thursday'),
+        (FRIDAY, 'Friday'),
+        (SATURDAY, 'Saturday')
+    )
     course = models.ForeignKey(Course)
     room = models.ForeignKey(Room)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    day = models.CharField(max_length=1, choices=DAYS_OF_WEEK)
+    day = models.CharField(max_length=1, choices=DAYS_OF_WEEK_CHOICES)
 
     def __str__(self):
         return "%s: (%s) %s-%s, %s" % (self.course, self.room,
