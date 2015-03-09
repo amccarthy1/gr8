@@ -50,14 +50,19 @@ class Term(models.Model):
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=80, null=False, blank=False)
-    section = models.IntegerField(null=False)
     course_code = models.ForeignKey(Course_Code)
     professor = models.ForeignKey(Profile, null=True)
     term = models.ForeignKey(Term)
+    name = models.CharField(max_length=80, null=False, blank=False)
+    section = models.IntegerField(null=False)
+    capacity = models.IntegerField(null=False, default=40)
 
     def __str__(self):
         return self.name
+
+    def desc_string(self):
+        return "[%s S%d]: %s" % (str(self.course_code), self.section,
+            self.name)
 
 
 class Enrolled_In(models.Model):
