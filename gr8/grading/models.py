@@ -7,15 +7,19 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    department = models.ForeignKey(Department)
     can_enroll = models.BooleanField(default=False)
 
     def __str__(self):
         return "Profile for user %r" % self.user.username
 
+class Affiliation(models.Model):
+    profile = models.ForeignKey(Profile)
+    department = models.ForeignKey(Department)
+
+    def __str__(self):
+        return "%s is a part of the %r department" % (self.profile.user.username, self.department.name)
 
 class Course_Code(models.Model):
     code = models.CharField(max_length=10, null=False, blank=False)
