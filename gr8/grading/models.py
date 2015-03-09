@@ -60,6 +60,9 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+    def get_enrollment(self):
+        return self.enrolled_in_set.count()
+
     def desc_string(self):
         return "[%s S%d]: %s" % (str(self.course_code), self.section,
             self.name)

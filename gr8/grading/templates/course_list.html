@@ -2,12 +2,12 @@
 {% block title %}
 List of Courses
 {% endblock title %}
-{% block body %}
+{% block content %}
     <ul>
     {% for course in courses %}
-        <li>
+        <li><a href="{% url 'grading:info' course.id %}">
             {{ course.desc_string }}
-        </li>
+        </a></li>
     {% endfor %}
     </ul>
-{% endblock body %}
+{% endblock content %}

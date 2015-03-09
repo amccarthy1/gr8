@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+Course Info {{ course.desc_string }}
+{% endblock title %}
+{% block content %}
+<table>
+    <tr>
+        <td colspan=2>
+            <b>{{ course.name }}</b>
+        </td>
+    </tr><tr>
+        <td><b>Course ID:</b></td>
+        <td>{{ course.course_code.code }}</td>
+    </tr><tr>
+        <td><b>Enrollment</b></td>
+        <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
+    </tr>
+
+
+</table>
+{% endblock content %}

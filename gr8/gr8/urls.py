@@ -9,6 +9,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'gr8.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^', include(grading_urls)),
+    url(r'^', include(grading_urls, namespace="grading")),
     url(r'^admin/', include(admin.site.urls)),
 )
