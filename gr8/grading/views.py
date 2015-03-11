@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from grading.models import *
 
 def view_home(request):
-    return render(request, "home.html")
+    return render(request, "index.html")
 
 # View that lists all courses.
 def course_list(request):
