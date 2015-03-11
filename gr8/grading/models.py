@@ -71,7 +71,7 @@ class Course(models.Model):
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Profile)
-    grade = models.FloatField()
+    grade = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return "%s: Enrolled in %s" % (self.student, self.course)
