@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if login_successful %}
+Login success!
+{% endif %}
+
+<form action="{% url 'login' %}" method="post">
+	{% csrf_token %}
+	<input type="hidden" name="next" value="{{ request.GET.next }}" />
+	<div class="row">
+		<div class="five columns alpha">
+			<label for="username">User name:</label>
+			<input type="text" name="username" value="" id="username">
+			<label for"password">Password:</label>
+			<input type="password" name="password" value="" id="password">
+		</div>
+	</div>
+	
+
+	<input type="submit" value="Login"  />
+
+</form>
+
+{% endblock content %}
