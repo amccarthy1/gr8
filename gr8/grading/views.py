@@ -4,6 +4,7 @@ from grading.models import *
 from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 
 def view_home(request):
@@ -51,3 +52,18 @@ def course_info(request, course_id=0):
         'course': c
     }
     return render(request, "course_info.html", context)
+
+@login_required
+def courses_enrolled(request):
+    profile = request.user.profile
+    if profile is None:
+        raise Http404()
+
+    my_enrolls = profile.enrolled_in_set.all()
+
+    context = {
+        'profile': profile,
+        'enrolled_ins' : my_enrolls,
+    }
+
+    return render(request, "courses_enrolled.html", context)

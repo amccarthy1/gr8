@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if profile %}
+{{ profile }}
+{% endif %}
+
+{%  for enrolled_in in enrolled_ins %}
+{{ enrolled_in.course }}
+{% endfor %}
+{% endblock content %}
