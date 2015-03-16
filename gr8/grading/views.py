@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import ProfileForm
+from .forms import ProfileForm, UserForm
 
 
 def view_home(request):
@@ -40,13 +40,30 @@ def logout(request):
 def user_registration(request):
 
     if request.method == "POST":
-        #create user
-        #render
-        pass
+        profile_form = ProfileForm(request.POST)
+        user_form = UserForm(request.POST)
+
+        if user_form.is_valid():
+            django_user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = django_user
+            profile.save()
+
+            profile_form = ProfileForm()
+            user_form = UserForm()
+            return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form, 
+                "success" : True})
+
+        else:
+            return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form, 
+                "success" : False})
 
     profile_form = ProfileForm()
+    user_form = UserForm()
 
-    return render(request, "user_registration.html", {"profile_form" : profile_form})
+    context = {"profile_form" : profile_form, "user_form" : user_form}
+
+    return render(request, "user_registration.html", context)
 
 
 # View that lists all courses.
