@@ -7,7 +7,9 @@ Login success!
 
 <form action="{% url 'login' %}" method="post">
 	{% csrf_token %}
+	{% if request.GET.next %}
 	<input type="hidden" name="next" value="{{ request.GET.next }}" />
+	{% endif %}
 	<div class="row">
 		<div class="five columns alpha">
 			<label for="username">User name:</label>
