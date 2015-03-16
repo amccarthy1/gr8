@@ -5,6 +5,7 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from .forms import ProfileForm
 
 
 def view_home(request):
@@ -35,6 +36,17 @@ def logout(request):
         return render(request, "index.html", {"logout_sucess": True})
     else:
         return redirect("grading:home")
+
+def user_registration(request):
+
+    if request.method == "POST":
+        #create user
+        #render
+        pass
+
+    profile_form = ProfileForm()
+
+    return render(request, "user_registration.html", {"profile_form" : profile_form})
 
 
 # View that lists all courses.
