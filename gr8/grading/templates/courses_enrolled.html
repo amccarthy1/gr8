@@ -2,10 +2,11 @@
 {% block content %}
 
 {% if profile %}
-{{ profile }}
+<h2>{{ profile }}</h2>
 {% endif %}
 
+<h3>Enrolled in:</h3>
 {%  for enrolled_in in enrolled_ins %}
-{{ enrolled_in.course }}
+<p>{{ enrolled_in.course }}</p>
 {% endfor %}
 {% endblock content %}

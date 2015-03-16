@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if profile %}
+<p>{{ profile }}</p>
+{% endif %}
+
+<h1>Shopping Bucket:</h1>
+{%  for enrolled_in in cart_courses %}
+<p>{{ enrolled_in.course }}</p>
+{% endfor %}
+
+<form action="{% url 'grading:cart' %}" method="POST">
+{% csrf_token %}
+
+<input type="submit" value="Enroll All">
+</form>
+
+{% endblock content %}

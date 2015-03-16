@@ -88,7 +88,7 @@ def courses_enrolled(request):
     if profile is None:
         raise Http404()
 
-    my_enrolls = profile.enrolled_in_set.all()
+    my_enrolls = profile.enrolled_in_set.filter(is_enrolled=True)
 
     context = {
         'profile': profile,
@@ -96,3 +96,24 @@ def courses_enrolled(request):
     }
 
     return render(request, "courses_enrolled.html", context)
+
+@login_required
+def shopping_bag(request):
+    profile = request.user.profile
+    if profile is None:
+        raise Http404()
+
+    if request.method == "POST":
+        my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
+        for enrolled_in in my_cart_courses:
+            enrolled_in.is_enrolled = True
+            enrolled_in.save()
+
+    my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
+
+    context = {
+        'profile' : profile,
+        'cart_courses' : my_cart_courses,
+    }
+
+    return render(request, "shopping_cart.html", context)
