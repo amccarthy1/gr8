@@ -1,0 +1,51 @@
+/* blue:      004358 */
+/* turquoise: 1F8A70 */
+/* green:     BEDB39 */
+/* yellow:    FFE11A */
+/* orange:    FD7400 */
+
+body{
+    margin: 0px; /* Need to remove the margin to eliminate white borders */
+    font-family: "Verdana";
+}
+header {
+    background-color: #1F8A70;
+    width: 100%;
+    height: 100px;
+}
+header #header {
+    margin-left: 5px;
+    margin-right: 5px;
+    position: relative;
+}
+header #title {
+    height: 100%;
+    float: left;
+    position: relative;
+}
+header #nav {
+    height: 100%;
+    float: right;
+    position: relative;
+}
+header #nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+header #nav ul li {
+    display: inline;
+}
+header #nav ul a {
+    display: inline-block;
+    color: #FFE11A;
+    text-decoration: none;
+}
+header #nav ul:hover {
+    color: #FD7400;
+}
+header h1 {
+    color: #004358;
+    font-family: "Trebuchet MS";
+    font-size: 3em;
+}

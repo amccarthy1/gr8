@@ -1,9 +1,23 @@
 <html>
     <head>
         <title>{% block title %}Gr8ing System{% endblock title %}</title>
+        <link rel="stylesheet" type="text/css" href="/static/grading/base.css" />
     </head>
 
     <body>
+        <header>
+            <div id="header">
+                <div id="title">
+                    <h1>The Gr8ing System</h1>
+                </div>
+                <div id="nav">
+                    <ul>
+                        <li><a href="{% url 'grading:list' %}">Course List</a>
+                        <li><a href="{% url 'login' %}">Login</a>
+                    </ul>
+                </div>
+            </div>
+        </header>
         {% block content %}{% endblock content %}
     </body>
 </html>
