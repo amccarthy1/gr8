@@ -56,6 +56,7 @@ class Course(models.Model):
     name = models.CharField(max_length=80, null=False, blank=False)
     section = models.IntegerField(null=False)
     capacity = models.IntegerField(null=False, default=40)
+    credits = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -72,6 +73,7 @@ class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Profile)
     grade = models.FloatField(blank=True, null=True)
+    is_enrolled = models.BooleanField(default=False)
 
     def __str__(self):
         return "%s: Enrolled in %s" % (self.student, self.course)
