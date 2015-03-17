@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% if logout_sucess %}
-Logout success!
-{% endif %}
-
-WELCOME TO THE GR8ING SYSTEM
+<div class="jumbotron">
+    <h1>
+        Welcome to the Gr8ing System!
+    </h1>
+    {% if not request.user.is_authenticated %}
+    <p>
+        Log in to view your course information.
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a></p>
+    {% else %}
+    <p>
+        Click the button below to view your enrolled courses
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="{% url 'grading:courses_enrolled' %}" role="button">Enrolled Courses</a></p>
+    {% endif %}
+</div>
 {% endblock content %}

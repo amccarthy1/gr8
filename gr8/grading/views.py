@@ -33,7 +33,7 @@ def logout(request):
 
     if request.user.is_authenticated():
         auth.logout(request)
-        return render(request, "index.html", {"logout_sucess": True})
+        return render(request, "index.html")
     else:
         return redirect("grading:home")
 

@@ -5,22 +5,23 @@
 Login success!
 {% endif %}
 
-<form action="{% url 'login' %}" method="post">
+<form action="{% url 'login' %}" method="post" class="login-form">
 	{% csrf_token %}
 	{% if request.GET.next %}
 	<input type="hidden" name="next" value="{{ request.GET.next }}" />
 	{% endif %}
 	<div class="row">
 		<div class="five columns alpha">
-			<label for="username">User name:</label>
-			<input type="text" name="username" value="" id="username">
-			<label for"password">Password:</label>
-			<input type="password" name="password" value="" id="password">
+			<label for="username" class="sr-only">Username</label>
+			<h2 class="form-signin-heading">Please log in</h2>
+			<input type="text" name="username" value="" id="username" class="form-control" placeholder="Username" required autofocus>
+			<label for"password" class="sr-only">Password</label>
+			<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" required autofocus>
+			<button class="btn btn-primary btn-block" type="submit">Log in</button>
 		</div>
 	</div>
 	
 
-	<input type="submit" value="Login"  />
 
 </form>
 
