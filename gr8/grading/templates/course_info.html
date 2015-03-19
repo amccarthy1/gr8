@@ -12,7 +12,10 @@ Course Info {{ course.desc_string }}
         <td><b>Course ID:</b></td>
         <td>{{ course.course_code.code }}</td>
     </tr><tr>
-        <td><b>Enrollment</b></td>
+        <td><b>Professor:</b></td>
+        <td>{{course.get_proff}}</td>
+    </tr><tr>
+        <td><b>Enrollment:</b></td>
         <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
     </tr>
 

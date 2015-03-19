@@ -58,7 +58,7 @@ def user_registration(request):
 
         else:
             return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form, 
-                "success" : False})
+                "failure" : True})
 
     profile_form = ProfileForm()
     user_form = UserForm()
