@@ -64,6 +64,9 @@ class Course(models.Model):
     def get_enrollment(self):
         return self.enrolled_in_set.count()
 
+    def get_proff(self):
+        return self.professor.user.first_name + " " + self.professor.user.last_name
+
     def desc_string(self):
         return "[%s S%d]: %s" % (str(self.course_code), self.section,
             self.name)

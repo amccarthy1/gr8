@@ -1,12 +1,6 @@
 {% extends 'base.html' %}
 {% block content %} 
 
-{% if success %}
-<h1>Success!</h1>
-{% else %}
-<h1>Not Success.</h1>
-{% endif %}
-
 <form action="{% url 'register' %}" method="post">
 	{% csrf_token %}
 	{{ profile_form.as_p }}
@@ -15,5 +9,13 @@
 	<input type="submit" value="Register"  />
 
 </form>
+
+{% if success %}
+<h1>User Created!</h1>
+{% endif %}
+{% if failure %}
+<h1>Error, User Not Created.</h1>
+{% endif %}
+
 
 {% endblock content %}
