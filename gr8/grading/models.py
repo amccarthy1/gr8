@@ -88,7 +88,7 @@ class Prereq(models.Model):
 
 
 class Room(models.Model):
-    name = models.CharField(max_length=12, null=False, blank=False)
+    name = models.CharField(max_length=12, null=False, blank=False, unique=True)
 
     def __str__(self):
         return self.name

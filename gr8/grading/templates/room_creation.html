@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'room_creation' %}" method="post">
+	{% csrf_token %}
+	{{ room_form.as_p }}
+
+	<input type="submit" value="Create Room"  />
+
+</form>
+
+{% if success %}
+<h1>Room Created</h1>
+{% elif failure %}
+<h1>Error Room Not Created.</h1>
+{% endif %}
+
+<h2>Rooms</h2>
+{% for room in rooms %}
+        <li>{{ room.name }}</li>
+{% endfor %}
+
+{% endblock content %}

@@ -5,7 +5,9 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import ProfileForm, UserForm
+from .forms import ProfileForm, UserForm, RoomForm
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 
 def view_home(request):
@@ -117,3 +119,28 @@ def shopping_bag(request):
     }
 
     return render(request, "shopping_cart.html", context)
+
+@staff_member_required
+def room_creation(request):
+
+    roomList = Room.objects.all()
+    print(roomList)
+
+    if request.method == "POST":
+        room_form = RoomForm(request.POST)
+
+        if room_form.is_valid():
+            room = room_form.save()
+            room.save()
+
+            room_form = RoomForm()
+            return render(request, "room_creation.html", {"room_form" : room_form,"rooms" : roomList,
+                "success" : True})
+
+        else:
+            return render(request, "room_creation.html", {"room_form" : room_form,"rooms" : roomList,
+                "failure" : True})
+
+    room_form = RoomForm()
+    context = {"room_form" : room_form,"rooms" : roomList,}
+    return render(request, "room_creation.html", context)
