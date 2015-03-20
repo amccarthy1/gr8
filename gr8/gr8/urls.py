@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from grading.views import login, logout, user_registration, room_creation
+from grading.views import login, logout, user_registration, room_creation, create_course
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^logout/$', logout, name="logout"),
     url(r'^register/$', user_registration, name="register"),
     url(r'^rooms/$', room_creation, name="room_creation"),
+    url(r'^course/create/$', create_course, name="course_creation"),
 )

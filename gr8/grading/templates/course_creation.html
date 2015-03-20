@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+<form action="{% url 'course_creation' %}" method="post">
+	{% csrf_token %}
+	{{ course_form.as_p }}
+
+	<input type="submit" value="Create Course"  />
+
+</form>
+
+{% if success %}
+<h1>Created Created!</h1>
+{% endif %}
+{% if failure %}
+<h1>Error, Course Not Created.</h1>
+{% endif %}
+
+
+{% endblock content %}

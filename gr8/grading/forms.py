@@ -33,3 +33,8 @@ class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ["name"]
+
+class CourseForm(forms.ModelForm):
+
+    class Meta:
+        model = Course
