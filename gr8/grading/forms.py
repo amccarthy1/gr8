@@ -28,6 +28,28 @@ class UserForm(UserCreationForm):
         model = User
         fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
 
+
+class SuperUserForm(UserCreationForm):
+    """
+    Allows the creation of a new user, with fields:
+        - username
+        - first_name
+        - last_name
+        - email
+        - password1
+        - password2
+        - is_staff
+    """
+    #All fields are required
+    email = forms.EmailField(label='Email', required=True)
+    first_name = forms.CharField(label='First Name', required=True)
+    last_name = forms.CharField(label='Last Name', required=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "first_name", "last_name", "email", "password1", "password2","is_staff"]
+
+
 class RoomForm(forms.ModelForm):
 
     class Meta:

@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import ProfileForm, UserForm, RoomForm
+from .forms import ProfileForm, UserForm, RoomForm, SuperUserForm
 from django.contrib.admin.views.decorators import staff_member_required
 from .decorators import staff_required
 
@@ -63,7 +63,11 @@ def user_registration(request):
                 "failure" : True})
 
     profile_form = ProfileForm()
-    user_form = UserForm()
+
+    if request.user.is_superuser:
+        user_form = SuperUserForm()
+    else:
+        user_form = UserForm()
 
     context = {"profile_form" : profile_form, "user_form" : user_form}
 
