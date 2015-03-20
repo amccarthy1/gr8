@@ -7,6 +7,8 @@ def staff_required(view_func=None, redirect_field_name=REDIRECT_FIELD_NAME,
     """
     Decorator for views that checks that the user is logged in and is a staff
     member, redirecting to the login page if necessary.
+
+    (Credit to Django, only modified the default login_url here)
     """
     actual_decorator = user_passes_test(
         lambda u: u.is_active and u.is_staff,
