@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from .forms import ProfileForm, UserForm, RoomForm
 from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import staff_required
 
 
 
@@ -39,6 +40,7 @@ def logout(request):
     else:
         return redirect("grading:home")
 
+@staff_required
 def user_registration(request):
 
     if request.method == "POST":
