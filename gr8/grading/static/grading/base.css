@@ -3,3 +3,69 @@
     padding: 15px;
     margin: 0 auto;
 }
+.bootstrap-table {
+  max-width: 1024px;
+  width: 100%;
+}
+
+.bootstrap-table tr td {
+  padding: 5px;
+}
+
+.bootstrap-table .col-right{
+  width: 80%;
+}
+
+.bootstrap-table .col-left{
+  text-align: right;
+}
+
+
+.bootstrap-table .col-left {
+  vertical-align: middle;
+}
+
+.entry textarea, .entry input, .entry select {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  vertical-align: middle;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+          transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.entry textarea {
+  height: auto;
+}
+
+.entry textarea:focus, .entry input:focus, .entry select:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.entry-error input, .entry-error select, .entry-error textarea{
+  border-color: red;
+  border-width: 2px;
+}
+
+
+.entry input:focus, .bootstrap-table textarea {
+  border-radius: 5px;
+  color: black;
+}
+
+.entry input[type="checkbox"] {
+  box-shadow: none;
+  width: 20px;
+  

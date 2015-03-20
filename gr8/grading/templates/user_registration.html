@@ -2,13 +2,44 @@
 {% block content %} 
 
 <form action="{% url 'register' %}" method="post">
-	{% csrf_token %}
-	{{ profile_form.as_p }}
-	{{ user_form.as_p }}
-
-	<input type="submit" value="Register"  />
-
+    <table class="bootstrap-table">
+    	{% csrf_token %}
+        {% for field in profile_form %}
+        <div class="form-group">
+            <tr>
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                <td class="col-left">{{ field.label_tag }}</td>
+                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
+                    {{ field }}
+                    <div class="text-danger">{{ field.errors.0 }}</div>
+                </td>
+                <td class="text-danger">{{ field.errors.0 }}</td>
+            {% endif %}
+            </tr>
+        </div>
+        {% endfor %}
+        {% for field in user_form %}
+        <div class="form-group">
+            <tr>
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                <td class="col-left">{{ field.label_tag }}</td>
+                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
+                    {{ field }}
+                    <div class="text-danger">{{ field.errors.0 }}</div>
+                </td>
+                <td class="text-danger">{{ field.errors.0 }}</td>
+            {% endif %}
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+    <input class='btn btn-md btn-primary' type="submit" value="Register"  />
 </form>
+
 
 {% if success %}
 <h1>User Created!</h1>
