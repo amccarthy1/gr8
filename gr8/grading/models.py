@@ -62,7 +62,7 @@ class Course(models.Model):
         return self.name
 
     def get_enrollment(self):
-        return self.enrolled_in_set.count()
+        return self.enrolled_in_set.filter(is_enrolled=True).count()
 
     def get_proff(self):
         return self.professor.user.first_name + " " + self.professor.user.last_name

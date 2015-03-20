@@ -85,8 +85,37 @@ def course_list(request):
 @login_required
 def course_info(request, course_id=0):
     c = get_object_or_404(Course, pk=course_id)
+    profile = request.user.profile
+
+    #can_enroll is true if user can enroll in courses
+    can_enroll = profile is not None and profile.can_enroll
+    is_enrolled = False
+    is_in_cart = False
+    if profile:
+        #is_enrolled is true if there is a Enrolled_In w/ this student & course
+        is_enrolled = len(Enrolled_In.objects.filter(course=c ,student=profile, is_enrolled=True)) > 0
+        is_in_cart = len(Enrolled_In.objects.filter(course=c, student=profile, is_enrolled=False)) > 0
+        #when user tries to enroll or add to bucket
+        if not is_enrolled and can_enroll and request.method == "POST":
+            if "enroll" in request.POST:
+                #see if there is already an Enrolled_In for this course/student
+                existing = Enrolled_In.objects.filter(course=c, student=profile)
+                #If it exists, flip the is_enrolled flag to True
+                if existing:
+                    existing[0].is_enrolled = True
+                    existing[0].save()
+                else:
+                    enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=True)
+                is_enrolled = True
+            elif not is_in_cart and "cart" in request.POST:
+                enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=False)
+                is_in_cart = True
+
     context = {
-        'course': c
+        'course': c,
+        'can_enroll' : can_enroll,
+        'is_enrolled' : is_enrolled,
+        'is_in_cart' : is_in_cart
     }
     return render(request, "course_info.html", context)
 
