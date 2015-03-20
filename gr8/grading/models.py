@@ -119,7 +119,7 @@ class Course_Session(models.Model):
     room = models.ForeignKey(Room)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    day = models.CharField(max_length=1, choices=DAYS_OF_WEEK_CHOICES)
+    day = models.CharField(max_length=5, choices=DAYS_OF_WEEK_CHOICES)
 
     def __str__(self):
         return "%s: (%s) %s-%s, %s" % (self.course, self.room,
