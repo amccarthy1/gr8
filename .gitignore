@@ -2,9 +2,6 @@
 *.sqlite3
 settings.py
 
-#django migrations
-migrations/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

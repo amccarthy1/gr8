@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class Department(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
@@ -44,6 +45,8 @@ class Term(models.Model):
     # TODO add comparator
     season = models.CharField(max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField()
+    start_date = models.DateTimeField(default=datetime.now())
+    end_date = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return "%s %s" % (self.season, self.year)
@@ -64,7 +67,7 @@ class Course(models.Model):
     def get_enrollment(self):
         return self.enrolled_in_set.filter(is_enrolled=True).count()
 
-    def get_proff(self):
+    def get_prof(self):
         return self.professor.user.first_name + " " + self.professor.user.last_name
 
     def desc_string(self):
