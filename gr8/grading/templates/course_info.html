@@ -3,36 +3,40 @@
 Course Info {{ course.desc_string }}
 {% endblock title %}
 {% block content %}
-<table class="table table table-bordered table-hover">
+<table id="class-info-table" class="table table-striped">
     <tbody>
         <tr>
-            <td colspan=2>
-                <b>{{ course.name }}</b>
-            </td>
+            <th colspan=4>
+                <h1><b>{{ course.name }}</b></h1>
+            </th>
         </tr>
         <tr>
-            <td><b>Course ID:</b></td>
+            <td class="item-name">Course ID:</td>
             <td>{{ course.course_code.code }}</td>
+            <td class="item-name">Term:</td>
+            <td>{{ course.term }}</td>
         </tr>
         <tr>
-            <td><b>Professor:</b></td>
+            <td class="item-name">Professor:</td>
             <td>{{ course.get_prof }}</td>
+            <td class="item-name"></td>
+            <td></td>
         </tr>
         <tr>
-            <td><b>Enrollment:</b></td>
+            <td class="item-name">Enrollment:</td>
             <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
+            <td class="item-name"></td>
+            <td></td>
         </tr>
         {% if can_enroll and not is_enrolled %}
         <tr>
             <form action="{% url 'grading:info' course.id %}" method="post">
                 {% csrf_token %}
-                <td>
+                <td colspan=4>
                     {% if not is_in_cart %}
-                    <input class="btn btn-primary" type="submit" name="cart" value="Add to Bucket List"/>
+                    <input class="btn btn-primary btn-info" type="submit" name="cart" value="Add to Bucket List"/>
                     {% endif %}
-                </td>
-                <td>
-                    <input class="btn btn-primary" type="submit" name="enroll" value="Enroll"/>
+                    <input class="btn btn-success" type="submit" name="enroll" value="Enroll"/>
                 </td>
             </form>
         </tr>

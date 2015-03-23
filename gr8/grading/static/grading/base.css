@@ -68,4 +68,13 @@
 .entry input[type="checkbox"] {
   box-shadow: none;
   width: 20px;
-  
+}
+
+#class-info-table td {
+  font-size: 14pt;
+}
+
+#class-info-table .item-name {
+  font-weight: bold;
+  width: 20%;
+}
