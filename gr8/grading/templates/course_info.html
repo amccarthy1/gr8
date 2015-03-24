@@ -12,21 +12,21 @@ Course Info {{ course.desc_string }}
         </tr>
         <tr>
             <td class="item-name">Course ID:</td>
-            <td>{{ course.course_code.code }}</td>
-            <td class="item-name">Term:</td>
-            <td>{{ course.term }}</td>
+            <td class="item-value">{{ course.course_code.code }}</td>
+            <td class="item-name">Section:</td>
+            <td class="item-value">{{ course.section }}</td>
         </tr>
         <tr>
             <td class="item-name">Professor:</td>
-            <td>{{ course.get_prof }}</td>
-            <td class="item-name"></td>
-            <td></td>
+            <td class="item-value">{{ course.get_prof }}</td>
+            <td class="item-name">Credits:</td>
+            <td class="item-value">{{ course.credits }}</td>
         </tr>
         <tr>
             <td class="item-name">Enrollment:</td>
-            <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
-            <td class="item-name"></td>
-            <td></td>
+            <td class="item-value">{{ course.get_enrollment }}/{{ course.capacity }}</td>
+            <td class="item-name">Term:</td>
+            <td class="item-value">{{ course.term }}</td>
         </tr>
         {% if can_enroll and not is_enrolled %}
         <tr>

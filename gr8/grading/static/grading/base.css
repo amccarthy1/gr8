@@ -78,3 +78,7 @@
   font-weight: bold;
   width: 20%;
 }
+
+#class-info-table .item-value {
+  width:30%;
+}
