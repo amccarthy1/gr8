@@ -16,7 +16,7 @@
 			<label for"password" class="sr-only">Password</label>
 			<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" required autofocus>
 			<button class="btn btn-primary btn-block" type="submit">Log in</button>
-			{% if not login_successful %}
+			{% if login_failed %}
 			<p class="text-danger">Login failed: invalid username or password.</p>
 			{% endif %}
 		</div>

@@ -28,7 +28,7 @@ def login(request):
             auth.login(request, user)
             return redirect(request.POST.get('next','grading:home'))
         else:
-            return render(request, "login.html", {"login_successful": False})
+            return render(request, "login.html", {"login_failed": True})
 
     return render(request, "login.html")
 
