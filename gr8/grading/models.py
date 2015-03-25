@@ -49,7 +49,13 @@ class Term(models.Model):
     end_date = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        return "%s %s" % (self.season, self.year)
+        #human-ify the season
+        season = self.season;#use the non human form as default
+        #iterate through choices to find a more readable name
+        for choice in self.TERM_CHOICES:
+            if self.season == choice[0]:
+                season = choice[1]
+        return "%s, %s" % (season, self.year)
 
 
 class Course(models.Model):
