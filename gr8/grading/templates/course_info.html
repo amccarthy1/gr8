@@ -28,15 +28,21 @@ Course Info {{ course.desc_string }}
             <td class="item-name">Term:</td>
             <td class="item-value">{{ course.term }}</td>
         </tr>
-        {% if can_enroll and not is_enrolled %}
+        {% if can_enroll %}
         <tr>
             <form action="{% url 'grading:info' course.id %}" method="post">
                 {% csrf_token %}
                 <td colspan=4>
-                    {% if not is_in_cart %}
-                    <input class="btn btn-primary btn-info" type="submit" name="cart" value="Add to Bucket List"/>
+                    {% if not is_enrolled %}
+                        {% if is_in_cart %}
+                        <input class="btn btn-danger btn-info" type="submit" name="cart_remove" value="Remove from Bucket List"/>    
+                        {% else %}
+                        <input class="btn btn-primary btn-info" type="submit" name="cart" value="Add to Bucket List"/>
+                        {% endif %}
+                        <input class="btn btn-success" type="submit" name="enroll" value="Enroll"/>
+                    {% else %}
+                        <input class="btn btn-danger" type="submit" name="drop" value="Drop"/>
                     {% endif %}
-                    <input class="btn btn-success" type="submit" name="enroll" value="Enroll"/>
                 </td>
             </form>
         </tr>

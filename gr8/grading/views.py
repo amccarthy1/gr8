@@ -96,8 +96,8 @@ def course_info(request, course_id=0):
     c = get_object_or_404(Course, pk=course_id)
     profile = request.user.profile
 
-    #can_enroll is true if user can enroll in courses
-    can_enroll = profile is not None and profile.can_enroll
+    can_enroll = (profile is not None and profile.can_enroll and c.professor != profile)
+
     is_enrolled = False
     is_in_cart = False
     if profile:
@@ -105,8 +105,8 @@ def course_info(request, course_id=0):
         is_enrolled = len(Enrolled_In.objects.filter(course=c ,student=profile, is_enrolled=True)) > 0
         is_in_cart = len(Enrolled_In.objects.filter(course=c, student=profile, is_enrolled=False)) > 0
         #when user tries to enroll or add to bucket
-        if not is_enrolled and can_enroll and request.method == "POST":
-            if "enroll" in request.POST:
+        if can_enroll and request.method == "POST":
+            if not is_enrolled and "enroll" in request.POST:
                 #see if there is already an Enrolled_In for this course/student
                 existing = Enrolled_In.objects.filter(course=c, student=profile)
                 #If it exists, flip the is_enrolled flag to True
@@ -116,9 +116,17 @@ def course_info(request, course_id=0):
                 else:
                     enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=True)
                 is_enrolled = True
-            elif not is_in_cart and "cart" in request.POST:
+            elif not is_enrolled and not is_in_cart and "cart" in request.POST:
                 enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=False)
                 is_in_cart = True
+            elif not is_enrolled and is_in_cart and "cart_remove" in request.POST:
+                enrolled_in = Enrolled_In.objects.filter(course=c, student=profile, is_enrolled=False)
+                enrolled_in.delete()
+                is_in_cart = False
+            elif is_enrolled and "drop" in request.POST:
+                enrolled_in = Enrolled_In.objects.filter(course=c, student=profile, is_enrolled=True)
+                enrolled_in.delete()
+                is_enrolled = False
 
     context = {
         'course': c,
