@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     url(r'^course/list$', course_list, name="list"),
     url(r'^course/list/current$', course_list_current, name="current"),
     url(r'^course/(?P<course_id>\d+)$', course_info, name="info"), #Single course info page
-    url(r'^course/enrolled$', courses_enrolled, name="courses_enrolled"),
+    url(r'^course/my-courses$', courses_mine, name="courses_mine"),
     url(r'^course/cart$', shopping_bag, name="cart"),
 )

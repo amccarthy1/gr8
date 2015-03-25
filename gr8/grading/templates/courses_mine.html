@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>My Courses</h1>
+<hr/>
+<h2>Enrolled Courses:</h2>
+
+<div class="row course-header">
+    <div class="col-md-2">Code</div>
+    <div class="col-md-4">Course Name</div>
+    <div class="col-md-3">Instructor</div>
+    <div class="col-md-1">Credits</div>
+    <div class="col-md-2">Term</div>
+</div>
+{%  for enrolled_in in enrolled_ins %}
+<div class="row course-row">
+    <div class="col-md-2 course-code course-col">
+        {{ enrolled_in.course.course_code }}
+    </div>
+    <div class="col-md-4 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
+        {{ enrolled_in.course.name }}
+    </a></div>
+    <div class="col-md-3 course-instructor course-col">
+        {{ enrolled_in.course.get_prof }}
+    </div>
+    <div class="col-md-1 course-credits course-col">
+        {{ enrolled_in.course.credits }}
+    </div>
+    <div class="col-md-2 course-term course-col">
+        {{ enrolled_in.course.term }}
+    </div>
+</div>
+
+{% endfor %}
+
+<hr/>
+
+<h2>Teaching Courses:</h2>
+
+<div class="row course-header">
+    <div class="col-md-2">Code</div>
+    <div class="col-md-4">Course Name</div>
+    <div class="col-md-3">Instructor</div>
+    <div class="col-md-1">Credits</div>
+    <div class="col-md-2">Term</div>
+</div>
+{%  for course in professor_of %}
+<div class="row course-row">
+    <div class="col-md-2 course-code course-col">
+        {{ course.course_code }}
+    </div>
+    <div class="col-md-4 course-name course-col"><a href="{% url 'grading:info' course.id %}">
+        {{ course.name }}
+    </a></div>
+    <div class="col-md-3 course-instructor course-col">
+        {{ course.get_prof }}
+    </div>
+    <div class="col-md-1 course-credits course-col">
+        {{ course.credits }}
+    </div>
+    <div class="col-md-2 course-term course-col">
+        {{ course.term }}
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+{% endblock content %}

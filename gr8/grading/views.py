@@ -129,19 +129,27 @@ def course_info(request, course_id=0):
     return render(request, "course_info.html", context)
 
 @login_required
-def courses_enrolled(request):
+def courses_mine(request):
     profile = request.user.profile
     if profile is None:
         raise Http404()
 
-    my_enrolls = profile.enrolled_in_set.filter(is_enrolled=True)
+    #get only current courses that the user is in
+    now = timezone.now()
+    enrolled_ins = profile.enrolled_in_set.filter(is_enrolled=True,
+        course__term__start_date__lt=now,
+        course__term__end_date__gt=now)
+
+    #get current courses the user is the professor of
+    professor_of = Course.get_current_courses().filter(professor=profile)
 
     context = {
-        'profile': profile,
-        'enrolled_ins' : my_enrolls,
+        'request': request,
+        'enrolled_ins' : enrolled_ins,
+        'professor_of' : professor_of,
     }
 
-    return render(request, "courses_enrolled.html", context)
+    return render(request, "courses_mine.html", context)
 
 @login_required
 def shopping_bag(request):
