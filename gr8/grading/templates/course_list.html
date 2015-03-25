@@ -3,11 +3,35 @@
 List of Courses
 {% endblock title %}
 {% block content %}
-    <ul>
+    {% if header %}
+    <h1>
+        {{ header }}
+    </h1>
+    {% endif %}
+    <div class="row course-header">
+        <div class="col-md-2">Code</div>
+        <div class="col-md-4">Course Name</div>
+        <div class="col-md-3">Instructor</div>
+        <div class="col-md-1">Credits</div>
+        <div class="col-md-2">Term</div>
+    </div>
     {% for course in courses %}
-        <li><a href="{% url 'grading:info' course.id %}">
-            {{ course.desc_string }}
-        </a></li>
+    <div class="row course-row">
+        <div class="col-md-2 course-code course-col">
+            {{ course.course_code }}
+        </div>
+        <div class="col-md-4 course-name course-col"><a href="{% url 'grading:info' course.id %}">
+            {{ course.name }}
+        </a></div>
+        <div class="col-md-3 course-instructor course-col">
+            {{ course.get_prof }}
+        </div>
+        <div class="col-md-1 course-credits course-col">
+            {{ course.credits }}
+        </div>
+        <div class="col-md-2 course-term course-col">
+            {{ course.term }}
+        </div>
+    </div>
     {% endfor %}
-    </ul>
 {% endblock content %}
