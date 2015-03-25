@@ -78,7 +78,16 @@ def user_registration(request):
 @login_required
 def course_list(request):
     context = {
-        'courses': Course.objects.all()
+        'courses': Course.objects.all(),
+        'header': "All Courses"
+    }
+    return render(request, "course_list.html", context)
+
+@login_required
+def course_list_current(request):
+    context = {
+        'courses': Course.get_current_courses(),
+        'header': "Current Courses"
     }
     return render(request, "course_list.html", context)
 

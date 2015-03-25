@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from django.utils import timezone
 
 class Department(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
@@ -45,8 +45,8 @@ class Term(models.Model):
     # TODO add comparator
     season = models.CharField(max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField()
-    start_date = models.DateTimeField(default=datetime.now())
-    end_date = models.DateTimeField(default=datetime.now())
+    start_date = models.DateTimeField(default=timezone.now())
+    end_date = models.DateTimeField(default=timezone.now())
 
     def __str__(self):
         #human-ify the season
@@ -79,6 +79,10 @@ class Course(models.Model):
     def desc_string(self):
         return "[%s S%d]: %s" % (str(self.course_code), self.section,
             self.name)
+
+    def get_current_courses():
+        now = timezone.now()
+        return Course.objects.filter(term__start_date__lt=now, term__end_date__gt=now)
 
 
 class Enrolled_In(models.Model):

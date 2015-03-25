@@ -82,3 +82,14 @@
 #class-info-table .item-value {
   width:30%;
 }
+.course-row .course-col {
+  font-size: 16pt;
+}
+.course-row .course-code {
+  font-weight: bold;
+}
+.course-header div {
+  font-size: 18pt;
+  font-weight: bold;
+  background-color: #4e5d6c;
+}
