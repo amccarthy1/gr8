@@ -1,14 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% if profile %}
-<p>{{ profile }}</p>
-{% endif %}
-
+{% if cart_courses.count %}
 <h1>Shopping Bucket:</h1>
-{%  for enrolled_in in cart_courses %}
-<p>{{ enrolled_in.course }}</p>
-{% endfor %}
+
+<table id="shopping-bucket-table" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Course ID</th>
+        <th>Course</th>
+        <th>Section</th>
+        <th>Professor</th>
+        <th>Enrollment</th>
+        <th>Credits</th>
+        <th>Term</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%  for enrolled_in in cart_courses %}
+      <tr>
+        <td>{{ enrolled_in.course.course_code.code }}</td>
+        <td>{{ enrolled_in.course }}</td>
+        <td>{{ enrolled_in.course.section }}</td>
+        <td>{{ enrolled_in.course.get_prof }}</td>
+        <td>{{ enrolled_in.course.get_enrollment }}/{{ enrolled_in.course.capacity}} </td>
+        <td>{{ enrolled_in.course.credits }}</td>
+        <td>{{ enrolled_in.course.term }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
 
 <form action="{% url 'grading:cart' %}" method="POST">
 {% csrf_token %}
@@ -16,4 +38,8 @@
 <input type="submit" value="Enroll All">
 </form>
 
+{% else %}
+<h1>Your Shopping Bucket Is Empty</h1>
+<h3>Go add some courses!</h3>
+{% endif %}
 {% endblock content %}
