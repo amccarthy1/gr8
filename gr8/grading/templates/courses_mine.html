@@ -2,6 +2,12 @@
 {% block content %}
 
 <h1>My Courses</h1>
+{% if enrolled_ins.count %}{% else %}
+    {% if professor_of.count %}{% else %}
+        <h2>You are not enrolled in or teaching any courses!</h2>
+    {% endif %}
+{% endif %}
+{% if enrolled_ins.count %}
 <hr/>
 <h2>Enrolled Courses:</h2>
 
@@ -12,7 +18,7 @@
     <div class="col-md-1">Credits</div>
     <div class="col-md-2">Term</div>
 </div>
-{%  for enrolled_in in enrolled_ins %}
+{% for enrolled_in in enrolled_ins %}
 <div class="row course-row">
     <div class="col-md-2 course-code course-col">
         {{ enrolled_in.course.course_code }}
@@ -31,8 +37,8 @@
     </div>
 </div>
 
-{% endfor %}
-
+{% endfor %}{% endif %}
+{% if professor_of.count %}
 <hr/>
 
 <h2>Teaching Courses:</h2>
@@ -63,7 +69,7 @@
     </div>
 </div>
 
-{% endfor %}
+{% endfor %}{% endif %}
 
 
 
