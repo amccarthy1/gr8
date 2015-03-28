@@ -98,6 +98,21 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+    def enroll_student(self, student):
+        """
+        NOTE: Only use this method to force-enroll a student, ignoring the
+        capacity of the course. This method should only be accessible to
+        course professors and sysadmins.
+        Parameters:
+            student: The student to enroll in this course
+        Returns:
+            The Enrolled_In object that was created or modified.
+        """
+        ei, created = Enrolled_In.objects.get_or_create(student=student, course=self)
+        ei.is_enrolled = True
+        ei.save()
+        return ei
+
     def is_open(self):
         return self.get_enrollment() < self.capacity
 
