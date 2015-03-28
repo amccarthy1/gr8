@@ -1,45 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h1>Shopping Cart</h1>
 {% if cart_courses.count %}
-<h1>Shopping Bucket:</h1>
+<hr/>
+<div class="row course-header">
+    <div class="col-md-2">Code</div>
+    <div class="col-md-3">Course Name</div>
+    <div class="col-md-1">Section</div>
+    <div class="col-md-3">Instructor</div>
+    <div class="col-md-1">Credits</div>
+    <div class="col-md-2">Term</div>
+</div>
+{% for enrolled_in in cart_courses %}
+<div class="row course-row">
+    <div class="col-md-2 course-code course-col">
+        {{ enrolled_in.course.course_code }}
+    </div>
+    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
+        {{ enrolled_in.course.name }}
+    </a></div>
+    <div class="col-md-1 course-section course-col">
+        {{ enrolled_in.course.section }}
+    </div>
+    <div class="col-md-3 course-instructor course-col">
+        {{ enrolled_in.course.get_prof }}
+    </div>
+    <div class="col-md-1 course-credits course-col">
+        {{ enrolled_in.course.credits }}
+    </div>
+    <div class="col-md-2 course-term course-col">
+        {{ enrolled_in.course.term }}
+    </div>
+</div>
 
-<table id="shopping-bucket-table" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Course ID</th>
-        <th>Course</th>
-        <th>Section</th>
-        <th>Professor</th>
-        <th>Enrollment</th>
-        <th>Credits</th>
-        <th>Term</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%  for enrolled_in in cart_courses %}
-      <tr>
-        <td>{{ enrolled_in.course.course_code.code }}</td>
-        <td>{{ enrolled_in.course }}</td>
-        <td>{{ enrolled_in.course.section }}</td>
-        <td>{{ enrolled_in.course.get_prof }}</td>
-        <td>{{ enrolled_in.course.get_enrollment }}/{{ enrolled_in.course.capacity}} </td>
-        <td>{{ enrolled_in.course.credits }}</td>
-        <td>{{ enrolled_in.course.term }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-
-
-<form action="{% url 'grading:cart' %}" method="POST">
-{% csrf_token %}
-
-<input type="submit" value="Enroll All">
-</form>
-
+{% endfor %}
 {% else %}
-<h1>Your Shopping Bucket Is Empty</h1>
-<h3>Go add some courses!</h3>
+<h2>Your shopping cart is empty. Add some courses to see them here!</h2>
 {% endif %}
 {% endblock content %}

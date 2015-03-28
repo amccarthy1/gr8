@@ -13,7 +13,8 @@
 
 <div class="row course-header">
     <div class="col-md-2">Code</div>
-    <div class="col-md-4">Course Name</div>
+    <div class="col-md-3">Course Name</div>
+    <div class="col-md-1">Section</div>
     <div class="col-md-3">Instructor</div>
     <div class="col-md-1">Credits</div>
     <div class="col-md-2">Term</div>
@@ -23,9 +24,12 @@
     <div class="col-md-2 course-code course-col">
         {{ enrolled_in.course.course_code }}
     </div>
-    <div class="col-md-4 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
+    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
         {{ enrolled_in.course.name }}
     </a></div>
+    <div class="col-md-1 course-section course-col">
+        {{ enrolled_in.course.section}}
+    </div>
     <div class="col-md-3 course-instructor course-col">
         {{ enrolled_in.course.get_prof }}
     </div>
@@ -45,7 +49,8 @@
 
 <div class="row course-header">
     <div class="col-md-2">Code</div>
-    <div class="col-md-4">Course Name</div>
+    <div class="col-md-3">Course Name</div>
+    <div class="col-md-1">Section</div>
     <div class="col-md-3">Instructor</div>
     <div class="col-md-1">Credits</div>
     <div class="col-md-2">Term</div>
@@ -55,9 +60,12 @@
     <div class="col-md-2 course-code course-col">
         {{ course.course_code }}
     </div>
-    <div class="col-md-4 course-name course-col"><a href="{% url 'grading:info' course.id %}">
+    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' course.id %}">
         {{ course.name }}
     </a></div>
+    <div class="col-md-1">
+        {{ course.section }}
+    </div>
     <div class="col-md-3 course-instructor course-col">
         {{ course.get_prof }}
     </div>

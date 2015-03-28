@@ -3,6 +3,11 @@
 Course Info {{ course.desc_string }}
 {% endblock title %}
 {% block content %}
+{% if enroll_success %}{% else %}
+<div class="error">
+Error: Course full, could not enroll.
+</div>
+{% endif %}
 <table id="class-info-table" class="table table-striped">
     <tbody>
         <tr>
@@ -39,7 +44,11 @@ Course Info {{ course.desc_string }}
                         {% else %}
                         <input class="btn btn-primary btn-info" type="submit" name="cart" value="Add to Bucket List"/>
                         {% endif %}
+                        {% if course.is_open %}
                         <input class="btn btn-success" type="submit" name="enroll" value="Enroll"/>
+                        {% else %}
+                        <input class="btn btn-disabled" type="submit" name="enroll" value="Enroll" disabled/>
+                        {% endif %}
                     {% else %}
                         <input class="btn btn-danger" type="submit" name="drop" value="Drop"/>
                     {% endif %}

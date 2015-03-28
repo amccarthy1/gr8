@@ -15,6 +15,34 @@ class Profile(models.Model):
     def __str__(self):
         return "Profile for user %r" % self.user.username
 
+    def enroll_in(self, course):
+        """
+        Enrolls the student in the course. This method ensures that the
+        course's capacity is not overflowed. Overfilled classes should still
+        be allowed, but only through a professor's discretion, and that
+        functionality should not be available through this method.
+        Parameters:
+            course: The course the student wants to enroll in
+        Returns:
+            True if the enrollment was successful.
+            False if the enrollment was not successful.
+        """
+        enrollment, created = Enrolled_In.objects.get_or_create(
+            student=self,
+            course=course
+        )
+        enrollment.is_enrolled = True
+        enrollment.save()
+        if (course.get_enrollment() < course.capacity):
+            return True
+        else:
+            if created:
+                enrollment.delete()
+            else:
+                enrollment.is_enrolled = False
+                enrollment.save()
+            return False
+
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)
     department = models.ForeignKey(Department)
@@ -69,6 +97,9 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+    def is_open(self):
+        return self.get_enrollment() < self.capacity
 
     def get_enrollment(self):
         return self.enrolled_in_set.filter(is_enrolled=True).count()
