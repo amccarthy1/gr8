@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from grading.views import *
+from grading.pdf import render_transcript
 
 #urls from grading
 urlpatterns = patterns('',
@@ -9,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^course/(?P<course_id>\d+)$', course_info, name="info"), #Single course info page
     url(r'^course/my-courses$', courses_mine, name="courses_mine"),
     url(r'^course/cart$', shopping_bag, name="cart"),
+    url(r'^pdf/$', render_transcript, name="pdf"), #TODO Move this URL to somewhere more useful.
 )
