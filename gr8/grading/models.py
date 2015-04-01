@@ -88,7 +88,7 @@ class Term(models.Model):
 
 class Course(models.Model):
     course_code = models.ForeignKey(Course_Code)
-    professor = models.ForeignKey(Profile, null=True)
+    professor = models.ForeignKey(Profile, null=True, blank=True)
     term = models.ForeignKey(Term)
     name = models.CharField(max_length=80, null=False, blank=False)
     section = models.IntegerField(null=False)
@@ -120,7 +120,11 @@ class Course(models.Model):
         return self.enrolled_in_set.filter(is_enrolled=True).count()
 
     def get_prof(self):
-        return self.professor.user.first_name + " " + self.professor.user.last_name
+
+        if self.professor is None:
+            return "STAFF"
+        else:
+            return self.professor.user.first_name + " " + self.professor.user.last_name
 
     def desc_string(self):
         return "[%s S%d]: %s" % (str(self.course_code), self.section,
