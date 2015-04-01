@@ -13,7 +13,7 @@
     <div class="col-md-2">Term</div>
 </div>
 {% for enrolled_in in cart_courses %}
-<div class="row course-row">
+<div class="row course-row" id="{{ enrolled_in.course.id }}">
     <div class="col-md-2 course-code course-col">
         {{ enrolled_in.course.course_code }}
     </div>
