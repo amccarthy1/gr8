@@ -204,9 +204,12 @@ def create_course(request):
 
     if request.method == "POST":
         course_form = CourseForm(request.POST)
+        code = Course_Code.objects.get_or_create(code=request.POST['code'])[0]
 
         if course_form.is_valid():
-            course = course_form.save();
+            course = course_form.save(commit=False)
+            course.course_code = code
+            course.save()
 
             course_form = CourseForm()
             return render(request, "course_creation.html", {"course_form": course_form, "success": True})

@@ -17,7 +17,7 @@ List of Courses
         <div class="col-md-2">Term</div>
     </div>
     {% for course in courses %}
-    <div class="row course-row">
+    <div class="row course-row" id="{{ course.id }}">
         <div class="col-md-2 course-code course-col">
             {{ course.course_code }}
         </div>

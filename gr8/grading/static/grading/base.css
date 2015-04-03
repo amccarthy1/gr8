@@ -84,6 +84,9 @@
 #class-info-table .item-value {
   width:30%;
 }
+.course-row:hover {
+  background-color: #4e5d6c;
+}
 .course-row .course-col {
   font-size: 16pt;
 }
