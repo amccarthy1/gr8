@@ -59,7 +59,9 @@ Error: Course full, could not enroll.
     </tbody>
 </table>
 
-{% if not can_enroll %}
+{% if is_professor %}
+    <p>You are teaching this course.</p>
+{% elif not can_enroll %}
     <p>You cannot enroll in courses!</p>
 {% elif is_enrolled %}
     <p>You are enrolled in this course.</p>

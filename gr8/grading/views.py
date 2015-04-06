@@ -97,6 +97,7 @@ def course_info(request, course_id=0):
     profile = request.user.profile
 
     can_enroll = (profile is not None and profile.can_enroll and c.professor != profile)
+    is_professor = (c.professor == profile)
 
     is_enrolled = False
     is_in_cart = False
@@ -126,7 +127,8 @@ def course_info(request, course_id=0):
         'can_enroll' : can_enroll,
         'is_enrolled' : is_enrolled,
         'is_in_cart' : is_in_cart,
-        'enroll_success' : success
+        'enroll_success' : success,
+        'is_professor' : is_professor,
     }
     return render(request, "course_info.html", context)
 
