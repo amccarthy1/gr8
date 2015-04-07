@@ -110,6 +110,7 @@ def course_info(request, course_id=0):
         if can_enroll and request.method == "POST":
             if "enroll" in request.POST:
                 success = profile.enroll_in(c)
+                is_enrolled = success
             elif not is_enrolled and not is_in_cart and "cart" in request.POST:
                 enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=False)
                 is_in_cart = True
