@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from grading.views import *
 from grading.pdf import render_transcript
+from grading.ajax import urlpatterns as ajax_urls
 
 #urls from grading
 urlpatterns = patterns('',
@@ -11,4 +12,6 @@ urlpatterns = patterns('',
     url(r'^course/my-courses$', courses_mine, name="courses_mine"),
     url(r'^course/cart$', shopping_bag, name="cart"),
     url(r'^pdf/$', render_transcript, name="pdf"), #TODO Move this URL to somewhere more useful.
+
+    url(r'^ajax/', include(ajax_urls, namespace="ajax")),
 )
