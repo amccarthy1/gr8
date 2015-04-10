@@ -67,7 +67,7 @@ WSGI_APPLICATION = 'gr8.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'django',
+        'NAME': 'django.db',
         # 'USER': '',
         # 'PASSWORD': '',
         # 'HOST': '',
