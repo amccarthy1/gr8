@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from grading.views import login, logout, user_registration, room_creation, create_course, term_creation
+from grading.views import login, logout
+from grading.adminViews import user_registration, room_creation, create_course, term_creation
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
