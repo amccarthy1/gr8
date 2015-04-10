@@ -73,8 +73,8 @@ class Term(models.Model):
     # TODO add comparator
     season = models.CharField(max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField()
-    start_date = models.DateTimeField(default=timezone.now())
-    end_date = models.DateTimeField(default=timezone.now())
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         #human-ify the season
