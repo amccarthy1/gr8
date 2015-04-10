@@ -51,6 +51,7 @@ class Affiliation(models.Model):
         return "%s is a part of the %r department" % (self.profile.user.username, self.department.name)
 
 class Course_Code(models.Model):
+    name = models.CharField(max_length=80, null=False, blank=False)
     code = models.CharField(max_length=10, null=False, blank=False)
 
     def __str__(self):
@@ -90,13 +91,12 @@ class Course(models.Model):
     course_code = models.ForeignKey(Course_Code)
     professor = models.ForeignKey(Profile, null=True, blank=True)
     term = models.ForeignKey(Term)
-    name = models.CharField(max_length=80, null=False, blank=False)
     section = models.IntegerField(null=False)
     capacity = models.IntegerField(null=False, default=40)
     credits = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        return self.name()
 
     def enroll_student(self, student):
         """
@@ -113,6 +113,9 @@ class Course(models.Model):
         ei.save()
         return ei
 
+    def name(self):
+        return self.course_code.name
+
     def is_open(self):
         return self.get_enrollment() < self.capacity
 
@@ -128,7 +131,7 @@ class Course(models.Model):
 
     def desc_string(self):
         return "[%s S%d]: %s" % (str(self.course_code), self.section,
-            self.name)
+            self.course_code.name)
 
     def get_current_courses():
         now = timezone.now()
@@ -146,8 +149,8 @@ class Enrolled_In(models.Model):
 
 
 class Prereq(models.Model):
-    prereq_class = models.ForeignKey(Course, related_name='prereq')
-    course = models.ForeignKey(Course, related_name='_')
+    prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')
+    course = models.ForeignKey(Course_Code, related_name='_')
 
     def __str__(self):
         return str(self.course)
