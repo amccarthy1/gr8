@@ -237,6 +237,10 @@ def term_creation(request):
 
             term.year = request.POST["end_date_year"]
 
+            for existingTerm in termList:
+                if str(term.season) == str(existingTerm.season) and str(term.year) == str(existingTerm.year):
+                    return render(request, "term_creation.html", {"term_form": term_form, "failure": True, "terms":termList})
+
             term.save()
 
             term_form = TermForm()

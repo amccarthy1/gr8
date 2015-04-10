@@ -30,12 +30,17 @@
 {% if success %}
 <h1>Term Created</h1>
 {% elif failure %}
-<h1>Error Term Not Created.</h1>
+<h1>Error Term Not Created, Term Already Exists</h1>
 {% endif %}
 
 <h2>Terms Currently In The System</h2>
-{% for term in terms %}
-        <li>{{ term }}</li>
-{% endfor %}
+{% if terms.count %}
+    {% for term in terms %}
+            <li>{{ term }}</li>
+    {% endfor %}
+
+{% else %}
+    <h3>There Are No Terms Currently In The System, Add Some!</h3>
+{% endif %}
 
 {% endblock content %}
