@@ -1,14 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
 from grading.models import *
 from django.contrib import auth
-from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import *
-from django.contrib.admin.views.decorators import staff_member_required
-from .decorators import staff_required
-
 
 
 def view_home(request):
@@ -39,39 +33,6 @@ def logout(request):
         return render(request, "index.html")
     else:
         return redirect("grading:home")
-
-@staff_required
-def user_registration(request):
-
-    if request.method == "POST":
-        profile_form = ProfileForm(request.POST)
-        user_form = UserForm(request.POST)
-
-        if user_form.is_valid():
-            django_user = user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = django_user
-            profile.save()
-
-            profile_form = ProfileForm()
-            user_form = UserForm()
-            return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form, 
-                "success" : True})
-
-        else:
-            return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form, 
-                "failure" : True})
-
-    profile_form = ProfileForm()
-
-    if request.user.is_superuser:
-        user_form = SuperUserForm()
-    else:
-        user_form = UserForm()
-
-    context = {"profile_form" : profile_form, "user_form" : user_form}
-
-    return render(request, "user_registration.html", context)
 
 
 # View that lists all courses.
@@ -176,68 +137,3 @@ def shopping_bag(request):
     }
 
     return render(request, "shopping_cart.html", context)
-
-@staff_required
-def room_creation(request):
-
-    roomList = Room.objects.all()
-
-    if request.method == "POST":
-        room_form = RoomForm(request.POST)
-
-        if room_form.is_valid():
-            room = room_form.save()
-            room.save()
-
-            room_form = RoomForm()
-            return render(request, "room_creation.html", {"room_form" : room_form,"rooms" : roomList,
-                "success" : True})
-
-        else:
-            return render(request, "room_creation.html", {"room_form" : room_form,"rooms" : roomList,
-                "failure" : True})
-
-    room_form = RoomForm()
-    context = {"room_form" : room_form,"rooms" : roomList,}
-    return render(request, "room_creation.html", context)
-
-
-@staff_required
-def create_course(request):
-    invalid_course_code = False
-    code = ""
-    if request.method == "POST":
-        course_form = CourseForm(request.POST)
-        try:
-            code = Course_Code.objects.get(code=request.POST['code'])
-            if course_form.is_valid():
-                course = course_form.save(commit=False)
-                course.course_code = code
-                course.save()
-
-                course_form = CourseForm()
-                return render(request, "course_creation.html", {"course_form": course_form, "success": True})
-        except:
-            invalid_course_code = True
-
-        return render(request, "course_creation.html", {"course_form": course_form, "failure": True, "invalid_course_code": invalid_course_code, "code": code})
-
-    course_form = CourseForm()
-    context = {"course_form" : course_form}
-    return render(request, "course_creation.html", context)
-
-@staff_required
-def create_course_code(request):
-    course_code_form = None
-    created = None
-    if (request.method == "POST"):
-        course_code_form = CourseCodeForm(request.POST)
-        if course_code_form.is_valid():
-            code = course_code_form.save()
-            created = code.code
-        else:
-            context = {"course_code_form" : course_code_form}
-            return render(request, "course_code_creation.html", context)
-    course_code_form = CourseCodeForm()
-    context = {"course_code_form" : course_code_form, "created": created}
-    return render(request, "course_code_creation.html", context)
