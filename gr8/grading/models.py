@@ -3,17 +3,17 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Department(models.Model):
-    name = models.CharField(max_length=40, null=False, blank=False)
+    name = models.CharField('name', max_length=40, unique=True)
 
     def __str__(self):
         return self.name
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    can_enroll = models.BooleanField(default=False)
+    can_enroll = models.BooleanField("can enroll?", default=False)
 
     def __str__(self):
-        return "Profile for user %r" % self.user.username
+        return self.user.username
 
     def enroll_in(self, course):
         """
@@ -51,12 +51,14 @@ class Affiliation(models.Model):
         return "%s is a part of the %r department" % (self.profile.user.username, self.department.name)
 
 class Course_Code(models.Model):
-    name = models.CharField(max_length=80, null=False, blank=False)
-    code = models.CharField(max_length=10, null=False, blank=False)
+    name = models.CharField('name', max_length=80)
+    code = models.CharField('code', max_length=10, unique=True, )
 
     def __str__(self):
         return self.code
 
+    class Meta:
+        verbose_name = "course code"
 
 class Term(models.Model):
     #Term Choice Definitions
@@ -72,10 +74,10 @@ class Term(models.Model):
         (SUMMER, 'Summer'),
     )
     # TODO add comparator
-    season = models.CharField(max_length=10, choices=TERM_CHOICES)
-    year = models.IntegerField()
-    start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField(default=timezone.now)
+    season = models.CharField('season', max_length=10, choices=TERM_CHOICES)
+    year = models.IntegerField('year')
+    start_date = models.DateTimeField('start date', default=timezone.now)
+    end_date = models.DateTimeField('end date', default=timezone.now)
 
     def __str__(self):
         #human-ify the season
@@ -91,9 +93,9 @@ class Course(models.Model):
     course_code = models.ForeignKey(Course_Code)
     professor = models.ForeignKey(Profile, null=True, blank=True)
     term = models.ForeignKey(Term)
-    section = models.IntegerField(null=False)
-    capacity = models.IntegerField(null=False, default=40)
-    credits = models.IntegerField()
+    section = models.IntegerField('section', null=False)
+    capacity = models.IntegerField('capacity', null=False, default=40)
+    credits = models.IntegerField('credits')
 
     def __str__(self):
         return self.name()
@@ -125,7 +127,7 @@ class Course(models.Model):
     def get_prof(self):
 
         if self.professor is None:
-            return "STAFF"
+            return "Staff"
         else:
             return self.professor.user.first_name + " " + self.professor.user.last_name
 
@@ -141,11 +143,14 @@ class Course(models.Model):
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Profile)
-    grade = models.FloatField(blank=True, null=True)
-    is_enrolled = models.BooleanField(default=False)
+    grade = models.FloatField('grade', blank=True, null=True)
+    is_enrolled = models.BooleanField("enrolled?", default=False)
 
     def __str__(self):
-        return "%s: Enrolled in %s" % (self.student, self.course)
+        return "%s -> '%s'" % (self.student, self.course)
+
+    class Meta:
+        verbose_name = "enrolled in"
 
 
 class Prereq(models.Model):
@@ -157,7 +162,7 @@ class Prereq(models.Model):
 
 
 class Room(models.Model):
-    name = models.CharField(max_length=12, null=False, blank=False, unique=True)
+    name = models.CharField('name', max_length=12, unique=True)
 
     def __str__(self):
         return self.name
@@ -183,10 +188,13 @@ class Course_Session(models.Model):
     )
     course = models.ForeignKey(Course)
     room = models.ForeignKey(Room)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    day = models.CharField(max_length=5, choices=DAYS_OF_WEEK_CHOICES)
+    start_time = models.TimeField('start time')
+    end_time = models.TimeField('end time')
+    day = models.CharField('day of week', max_length=5, choices=DAYS_OF_WEEK_CHOICES)
 
     def __str__(self):
         return "%s: (%s) %s-%s, %s" % (self.course, self.room,
             self.start_time, self.end_time, self.day)
+
+    class Meta:
+        verbose_name = "course session"

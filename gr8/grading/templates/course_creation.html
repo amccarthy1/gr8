@@ -9,11 +9,15 @@
         <div class="form-group">
             <tr>
                 <td class="col-left"><label for="id_code">Code:</label></td>
-                 <td class="col-right entry {% if invalid_course_code %}entry-error{% endif %}" id="course-code" value="{{ code }}">
-                    <input type="text" id="id_code" name="code" maxlength="10" />
+                 <td class="col-right entry {% if invalid_course_code %}entry-error{% endif %}" id="course-code">
+                    <input type="text" id="id_code" name="code" maxlength="10" value="{{ code }}" />
                 </td>
                 <td class="col-right" id="found-course-name">
-                    {% if invalid_course_code %}<span class="text-danger">Course code not found</span>{% endif %}
+                    {% if invalid_course_code %}
+                        <span class="text-danger">Course code not found</span>
+                    {% else %}
+                        {{ code.name }}
+                    {% endif %}
                 </td>
             </tr>
         </div>

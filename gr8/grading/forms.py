@@ -64,11 +64,9 @@ class CourseForm(forms.ModelForm):
 
 class CourseCodeForm(forms.ModelForm):
 
+    # uppercase all course codes
     def clean_code(self):
-        code = self.cleaned_data['code'].upper()
-        if Course_Code.objects.filter(code=code).count():
-            raise forms.ValidationError("That course code already exists.")
-        return code
+        return self.cleaned_data['code'].upper()
 
     class Meta:
         model = Course_Code

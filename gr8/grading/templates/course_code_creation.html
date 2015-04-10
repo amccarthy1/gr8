@@ -22,5 +22,10 @@
 	</table>
 	<input class="btn btn-md btn-primary" type="submit" value="Create Course Code" />
 </form>
+{% if created %}
+<h2>
+	Created code '{{ created }}'
+<h2>
+{% endif %}
 
 {% endblock content %}

@@ -229,13 +229,15 @@ def create_course(request):
 @staff_required
 def create_course_code(request):
     course_code_form = None
+    created = None
     if (request.method == "POST"):
         course_code_form = CourseCodeForm(request.POST)
         if course_code_form.is_valid():
             code = course_code_form.save()
+            created = code.code
         else:
             context = {"course_code_form" : course_code_form}
             return render(request, "course_code_creation.html", context)
     course_code_form = CourseCodeForm()
-    context = {"course_code_form" : course_code_form}
+    context = {"course_code_form" : course_code_form, "created": created}
     return render(request, "course_code_creation.html", context)
