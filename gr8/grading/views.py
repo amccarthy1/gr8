@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import ProfileForm, UserForm, RoomForm, SuperUserForm, CourseForm
+from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from .decorators import staff_required
 
@@ -204,23 +204,38 @@ def room_creation(request):
 
 @staff_required
 def create_course(request):
-
+    invalid_course_code = False
+    code = ""
     if request.method == "POST":
         course_form = CourseForm(request.POST)
-        code = Course_Code.objects.get_or_create(code=request.POST['code'])[0]
+        try:
+            code = Course_Code.objects.get(code=request.POST['code'])
+            if course_form.is_valid():
+                course = course_form.save(commit=False)
+                course.course_code = code
+                course.save()
 
-        if course_form.is_valid():
-            course = course_form.save(commit=False)
-            course.course_code = code
-            course.save()
+                course_form = CourseForm()
+                return render(request, "course_creation.html", {"course_form": course_form, "success": True})
+        except:
+            invalid_course_code = True
 
-            course_form = CourseForm()
-            return render(request, "course_creation.html", {"course_form": course_form, "success": True})
-
-        else:
-            return render(request, "course_creation.html", {"course_form": course_form, "failure": True})
+        return render(request, "course_creation.html", {"course_form": course_form, "failure": True, "invalid_course_code": invalid_course_code, "code": code})
 
     course_form = CourseForm()
     context = {"course_form" : course_form}
     return render(request, "course_creation.html", context)
 
+@staff_required
+def create_course_code(request):
+    course_code_form = None
+    if (request.method == "POST"):
+        course_code_form = CourseCodeForm(request.POST)
+        if course_code_form.is_valid():
+            code = course_code_form.save()
+        else:
+            context = {"course_code_form" : course_code_form}
+            return render(request, "course_code_creation.html", context)
+    course_code_form = CourseCodeForm()
+    context = {"course_code_form" : course_code_form}
+    return render(request, "course_code_creation.html", context)

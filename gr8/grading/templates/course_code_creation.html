@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Create a Course Code</h1>
+<form action="{% url 'create_course_code' %}" method="POST">
+	<table class="bootstrap-table">
+		{% csrf_token %}
+		{% for field in course_code_form %}
+		<div class="form-group">
+			<tr>
+			{% if field.is_hidden %}
+				{{ field }}
+			{% else %}
+				<td class="col-left">{{ field.label_tag }}</td>
+				<td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
+					{{ field }}
+					<div class="text-danger">{{field.errors.0}}</div>
+				</td>
+			{% endif %}
+			</tr>
+		</div>
+		{% endfor %}
+	</table>
+	<input class="btn btn-md btn-primary" type="submit" value="Create Course Code" />
+</form>
+
+{% endblock content %}

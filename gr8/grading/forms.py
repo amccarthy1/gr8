@@ -61,3 +61,15 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
         exclude = ["course_code"]
+
+class CourseCodeForm(forms.ModelForm):
+
+    def clean_code(self):
+        code = self.cleaned_data['code'].upper()
+        if Course_Code.objects.filter(code=code).count():
+            raise forms.ValidationError("That course code already exists.")
+        return code
+
+    class Meta:
+        model = Course_Code
+        fields = ["code", "name"]
