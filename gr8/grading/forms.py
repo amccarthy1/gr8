@@ -57,7 +57,6 @@ class RoomForm(forms.ModelForm):
         fields = ["name"]
 
 class CourseForm(forms.ModelForm):
-    code = forms.CharField(max_length=10)
 
     class Meta:
         model = Course

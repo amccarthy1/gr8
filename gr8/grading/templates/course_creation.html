@@ -2,11 +2,20 @@
 {% block content %} 
 
 <h1>Create a Course</h1>
-<h2 id="found-course-name"></h2>
 <form action="{% url 'course_creation' %}" method="post">
 	{% csrf_token %}
 	<table class="bootstrap-table">
     	{% csrf_token %}
+        <div class="form-group">
+            <tr>
+                <td class="col-left"><label for="id_code">Code:</label></td>
+                <td class="entry" id="course-code">
+                    <input type="text" id="id_code" name="code" maxlength="10" />
+                </td>
+                <td class="col-right" id="found-course-name">
+                </td>
+            </tr>
+        </div>
         {% for field in course_form %}
         <div class="form-group">
             <tr>
@@ -14,7 +23,7 @@
                 {{ field }}
             {% else %}
                 <td class="col-left">{{ field.label_tag }}</td>
-                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
+                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}" colspan=2>
                     {{ field }}
                     <div class="text-danger">{{ field.errors.0 }}</div>
                 </td>
