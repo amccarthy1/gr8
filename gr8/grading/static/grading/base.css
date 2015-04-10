@@ -85,16 +85,17 @@
   width:30%;
 }
 .course-row:hover {
-  background-color: #4e5d6c;
+  background-color: #E5E1EA;
 }
 .course-row .course-col {
-  font-size: 16pt;
+  font-size: 14pt;
 }
 .course-row .course-code {
   font-weight: bold;
 }
 .course-header div {
-  font-size: 18pt;
+  font-size: 16pt;
   font-weight: bold;
-  background-color: #4e5d6c;
+  background-color: #F36E21;
+  color: #FFFFFF;
 }

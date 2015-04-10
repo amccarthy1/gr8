@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %} 
-
+<h1>Create a User</h1>
 <form action="{% url 'register' %}" method="post">
     <table class="bootstrap-table">
     	{% csrf_token %}
