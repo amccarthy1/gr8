@@ -33,6 +33,13 @@ Error: Course full, could not enroll.
             <td class="item-name">Term:</td>
             <td class="item-value">{{ course.term }}</td>
         </tr>
+        {% if course.prereq_set.count %}
+        <tr>
+            <th colspan=4>
+                <h1>Prerequisites</h1>
+            </th>
+        </tr>
+        {% endif %}
         {% if can_enroll %}
         <tr>
             <form action="{% url 'grading:info' course.id %}" method="post">
