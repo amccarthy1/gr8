@@ -96,7 +96,7 @@ class Course(models.Model):
     credits = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        return self.name()
 
     def enroll_student(self, student):
         """
