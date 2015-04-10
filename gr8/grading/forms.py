@@ -2,6 +2,8 @@ from django import forms
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.forms.extras.widgets import SelectDateWidget
+import datetime
 
 class ProfileForm(forms.ModelForm):
 
@@ -62,3 +64,13 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
         exclude = ["course_code"]
+
+class TermForm(forms.ModelForm):
+
+    start_date = forms.DateField(widget=SelectDateWidget, initial=datetime.date.today())
+
+    end_date = forms.DateField(widget=SelectDateWidget, initial=datetime.date.today())
+
+    class Meta:
+        model = Term;
+        exclude = ["year"]

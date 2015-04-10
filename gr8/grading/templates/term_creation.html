@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'term_creation' %}" method="post">
+	{% csrf_token %}
+	<table class="bootstrap-table">
+    	{% csrf_token %}
+        {% for field in term_form %}
+        <div class="form-group">
+            <tr>
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                <td class="col-left">{{ field.label_tag }}</td>
+                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
+                    {{ field }}
+                    <div class="text-danger">{{ field.errors.0 }}</div>
+                </td>
+                <td class="text-danger">{{ field.errors.0 }}</td>
+            {% endif %}
+            </tr>
+        </div>
+        {% endfor %}
+         <tr><td><td><input class="btn btn-md btn-primary" type="submit" value="Create Term" /></tr></td></td>
+    </table>
+
+
+</form>
+
+{% if success %}
+<h1>Term Created</h1>
+{% elif failure %}
+<h1>Error Term Not Created.</h1>
+{% endif %}
+
+<h2>Terms Currently In The System</h2>
+{% for term in terms %}
+        <li>{{ term }}</li>
+{% endfor %}
+
+{% endblock content %}

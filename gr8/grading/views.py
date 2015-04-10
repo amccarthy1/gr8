@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth import views
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from .forms import ProfileForm, UserForm, RoomForm, SuperUserForm, CourseForm
+from .forms import ProfileForm, UserForm, RoomForm, SuperUserForm, CourseForm, TermForm
 from django.contrib.admin.views.decorators import staff_member_required
 from .decorators import staff_required
 
@@ -223,4 +223,29 @@ def create_course(request):
     course_form = CourseForm()
     context = {"course_form" : course_form}
     return render(request, "course_creation.html", context)
+
+@staff_required
+def term_creation(request):
+
+    termList = Term.objects.all()
+
+    if request.method == "POST":
+        term_form = TermForm(request.POST)
+
+        if term_form.is_valid():
+            term = term_form.save(commit=False)
+
+            term.year = request.POST["end_date_year"]
+
+            term.save()
+
+            term_form = TermForm()
+            return render(request, "term_creation.html", {"term_form": term_form, "success": True, "terms":termList})
+
+        else:
+            return render(request, "term_creation.html", {"term_form": term_form, "failure": True, "terms":termList})
+
+    term_form = TermForm()
+    context = {"term_form" : term_form, "terms":termList}
+    return render(request, "term_creation.html", context)
 
