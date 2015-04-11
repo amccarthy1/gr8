@@ -95,4 +95,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/opt/env/static/'
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/login'

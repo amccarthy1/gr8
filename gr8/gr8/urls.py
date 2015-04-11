@@ -20,6 +20,6 @@ urlpatterns = patterns('',
     url(r'^register$', user_registration, name="register"),
     url(r'^rooms$', room_creation, name="room_creation"),
     url(r'^course/create$', create_course, name="course_creation"),
-    url(r'^terms/$',term_creation, name="term_creation"),
+    url(r'^terms$',term_creation, name="term_creation"),
     url(r'^course/code/create$', create_course_code, name="create_course_code"),
 )
