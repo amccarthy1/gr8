@@ -30,7 +30,7 @@ def course_grade(request, course_id=0, profile_id=0):
     else:
         forms = [GradeForm(prefix=str(x), instance=enrolled_ins[x]) for x in range(0,len(enrolled_ins))]
 
-    #create a list of 
+    #create a list of stuff
     grade_items = []
     for i in range(0,len(enrolled_ins)):
         grade_items.append((enrolled_ins[i],forms[i]))

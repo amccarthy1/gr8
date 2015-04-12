@@ -67,7 +67,7 @@ Error: Course full, could not enroll.
 </table>
 
 {% if is_professor %}
-<a class="btn btn-primary pull-right" href="{% url 'grading:course_grade' course.id request.user.id %}">
+<a class="btn btn-primary pull-right" href="{% url 'grading:course_grade' course.id request.user.profile.id %}">
     Enter Grades
 </a>
 {% endif %}
