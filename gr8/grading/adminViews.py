@@ -17,8 +17,30 @@ def course_grade(request, course_id=0, profile_id=0):
         order_by=['grade_is_null', 'student__user__last_name', 'student__user__first_name']
     )
 
+    forms = []
+    if request.method == "POST":
+        #save all the forms!
+        forms = [GradeForm(request.POST, prefix=str(x), instance=Enrolled_In()) for x in range(0,len(enrolled_ins))]
+        for i in range(0,len(forms)):
+            if forms[i].is_valid():
+                enrolled_in = forms[i].save(commit=False)
+                enrolled_ins[i].grade = enrolled_in.grade
+                print(enrolled_in.grade)
+                enrolled_ins[i].save()
+
+    else:
+        forms = [GradeForm(prefix=str(x), instance=enrolled_ins[x]) for x in range(0,len(enrolled_ins))]
+
+    #create a list of 
+    grade_items = []
+    print(enrolled_ins)
+    print(forms)
+    for i in range(0,len(enrolled_ins)):
+        grade_items.append((enrolled_ins[i],forms[i]))
+
     context = {
-        "enrolled_ins": enrolled_ins,
+        "grade_items": grade_items,
+        "course" : c,
     }
     return render(request, "course_grade.html", context)
 

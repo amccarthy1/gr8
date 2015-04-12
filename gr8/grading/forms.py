@@ -5,6 +5,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms.extras.widgets import SelectDateWidget
 import datetime
 
+class GradeForm(forms.ModelForm):
+
+    class Meta:
+        model = Enrolled_In
+        fields = ['grade']
+
 class ProfileForm(forms.ModelForm):
 
     class Meta:

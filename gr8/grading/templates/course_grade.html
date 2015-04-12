@@ -18,22 +18,26 @@
         </div>
     </div>
 
-    {% for enrolled_in in enrolled_ins %}
+    <form action="{% url 'grading:course_grade' course.id request.user.id%}" method="POST">
+        {% csrf_token %}
+        {% for item in grade_items %}
         <div class="row">
             <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
-                {{ enrolled_in.student.user.last_name }}
+                {{ item.0.student.user.last_name }}
             </div>
             <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
-                {{ enrolled_in.student.user.first_name}}
+                {{ item.0.student.user.first_name}}
             </div>
             <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
-                {{ enrolled_in.student.user.username}}
+                {{ item.0.student.user.username}}
             </div>
-            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
-                {{ enrolled_in.grade}}
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12 entry">
+                {{item.1.grade}}
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
+        <input class='btn btn-md btn-primary pull-right' type="submit" value="Save Grades"  />
+    </form>
 
 </div>
 
