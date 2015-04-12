@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+
+    <div class="row bg-primary">
+        <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+            <h3>Last Name</h3>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+            <h3>First Name</h3>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+            <h3>Username</h3>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+            <h3>Grade</h3>
+        </div>
+    </div>
+
+    {% for enrolled_in in enrolled_ins %}
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+                {{ enrolled_in.student.user.last_name }}
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+                {{ enrolled_in.student.user.first_name}}
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+                {{ enrolled_in.student.user.username}}
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
+                {{ enrolled_in.grade}}
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

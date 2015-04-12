@@ -1,7 +1,27 @@
 from grading.models import *
 from .decorators import staff_required
 from .forms import *
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
+
+@staff_required
+def course_grade(request, course_id=0, profile_id=0):
+    p = get_object_or_404(Profile, pk=profile_id)
+    c = get_object_or_404(Course.get_current_courses(), pk=course_id, professor=p)
+
+    enrolled_ins = Enrolled_In.objects.filter(course=c)
+    #this should make students without grades first, then subsort by last name, first name
+    enrolled_ins = enrolled_ins.extra(select={
+        'grade_is_null' : 'grade IS NULL',
+        },
+        order_by=['grade_is_null', 'student__user__last_name', 'student__user__first_name']
+    )
+
+    context = {
+        "enrolled_ins": enrolled_ins,
+    }
+    return render(request, "course_grade.html", context)
+
 
 
 @staff_required

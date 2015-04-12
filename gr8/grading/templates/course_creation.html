@@ -2,7 +2,7 @@
 {% block content %} 
 
 <h1>Create a Course</h1>
-<form action="{% url 'course_creation' %}" method="post">
+<form action="{% url 'grading:course_creation' %}" method="post">
 	{% csrf_token %}
 	<table class="bootstrap-table">
     	{% csrf_token %}

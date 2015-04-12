@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-    <form action="{% url 'room_creation' %}" method="post">
+    <form action="{% url 'grading:room_creation' %}" method="post">
     {% csrf_token %}
         <div class="form-group">
             {% for field in room_form %}

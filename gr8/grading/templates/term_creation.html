@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<form action="{% url 'term_creation' %}" method="post">
+<form action="{% url 'grading:term_creation' %}" method="post">
 	{% csrf_token %}
 	<table class="bootstrap-table">
     	{% csrf_token %}

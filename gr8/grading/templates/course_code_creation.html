@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Create a Course Code</h1>
-<form action="{% url 'create_course_code' %}" method="POST">
+<form action="{% url 'grading:create_course_code' %}" method="POST">
 	<table class="bootstrap-table">
 		{% csrf_token %}
 		{% for field in course_code_form %}
