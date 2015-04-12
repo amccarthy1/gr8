@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <form action="{% url 'grading:course_grade' course.id request.user.id%}" method="POST">
+    <form action="{% url 'grading:course_grade' course.id request.user.profile.id%}" method="POST">
         {% csrf_token %}
         {% for item in grade_items %}
         <div class="row">
