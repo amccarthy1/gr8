@@ -25,7 +25,6 @@ def course_grade(request, course_id=0, profile_id=0):
             if forms[i].is_valid():
                 enrolled_in = forms[i].save(commit=False)
                 enrolled_ins[i].grade = enrolled_in.grade
-                print(enrolled_in.grade)
                 enrolled_ins[i].save()
 
     else:
@@ -33,8 +32,6 @@ def course_grade(request, course_id=0, profile_id=0):
 
     #create a list of 
     grade_items = []
-    print(enrolled_ins)
-    print(forms)
     for i in range(0,len(enrolled_ins)):
         grade_items.append((enrolled_ins[i],forms[i]))
 
