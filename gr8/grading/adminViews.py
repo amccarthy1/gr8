@@ -57,7 +57,12 @@ def user_registration(request):
             profile.save()
 
             profile_form = ProfileForm()
-            user_form = UserForm()
+
+            if request.user.is_superuser:
+                user_form = SuperUserForm()
+            else:
+                user_form = UserForm()
+
             return render(request, "user_registration.html", {"profile_form" : profile_form, "user_form" : user_form,
                 "success" : True})
 
