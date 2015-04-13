@@ -2,6 +2,8 @@
 *.sqlite3
 settings.py
 *.db
+migrations/
+!migrations/__init__.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
