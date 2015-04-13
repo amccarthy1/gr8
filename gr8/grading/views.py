@@ -20,6 +20,8 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
+            if Profile.objects.filter(user=user).count() == 0:
+                Profile.objects.create(user=user)
             return redirect(request.POST.get('next','grading:home'))
         else:
             return render(request, "login.html", {"login_failed": True})
