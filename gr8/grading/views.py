@@ -139,3 +139,8 @@ def shopping_bag(request):
     }
 
     return render(request, "shopping_cart.html", context)
+
+@login_required
+def schedule(request):
+
+    return render(request, "my_schedule.html")
