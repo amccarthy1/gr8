@@ -20,6 +20,17 @@
 
 $('#calendar').fullCalendar({
     // put your options and callbacks here
+    header : {
+        left: '',
+        center: '',
+        right: ''
+    },
+    defaultView : "basicWeek",
+    views: {
+        week: {
+            columnFormat: "ddd"
+        }
+    }
 })
 
 </script>
