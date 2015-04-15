@@ -103,10 +103,7 @@ def courses_mine(request):
         raise Http404()
 
     #get only current courses that the user is in
-    now = timezone.now()
-    enrolled_ins = profile.enrolled_in_set.filter(is_enrolled=True,
-        course__term__start_date__lt=now,
-        course__term__end_date__gt=now)
+    enrolled_ins = profile.get_current_enrolled()
 
     #get current courses the user is the professor of
     professor_of = Course.get_current_courses().filter(professor=profile)
@@ -142,5 +139,30 @@ def shopping_bag(request):
 
 @login_required
 def schedule(request):
+    profile = request.user.profile
+    if profile is None:
+        raise Http404()
 
-    return render(request, "my_schedule.html")
+    enrolled_ins = profile.get_current_enrolled()
+
+    #make a list of json to be rendered as schedule items
+    default_date = "2015-01-04"#first sunday of the year, don't be curious about this
+    sessions = []
+    for enrolled_in in enrolled_ins:
+        #get all sessions for this course
+        course_sessions = enrolled_in.course.get_sessions()
+
+        #jsonify all course sessions
+        for course_session in course_sessions:
+            #grab the string of the title, startTime, and endTime
+            title = str(course_session.course)
+            startTime = course_session.start_time.strftime("%H:%M:%S")
+            endTime = course_session.end_time.strftime("%H:%M:%S")
+            #get the number day it is
+            day = str(course_session.day_to_int())
+
+            #format the json, day, star
+            session = "{ title: '%s' , day: %s, startTime: '%s', endTime: '%s' }" % (title, day, startTime, endTime)
+            sessions.append(session)
+
+    return render(request, "my_schedule.html", {'sessions' : sessions})

@@ -43,6 +43,16 @@ class Profile(models.Model):
                 enrollment.save()
             return False
 
+    def get_current_enrolled(self):
+        """
+        Returns all current Enrolled_Ins for this profile.
+        """
+        now = timezone.now()
+        enrolled_ins = self.enrolled_in_set.filter(is_enrolled=True,
+            course__term__start_date__lt=now,
+            course__term__end_date__gt=now)
+        return enrolled_ins
+
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)
     department = models.ForeignKey(Department)
@@ -139,6 +149,9 @@ class Course(models.Model):
         now = timezone.now()
         return Course.objects.filter(term__start_date__lt=now, term__end_date__gt=now)
 
+    def get_sessions(self):
+        return Course_Session.objects.filter(course=self)
+
 
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
@@ -151,7 +164,6 @@ class Enrolled_In(models.Model):
 
     class Meta:
         verbose_name = "enrolled in"
-
 
 class Prereq(models.Model):
     prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')
@@ -198,3 +210,13 @@ class Course_Session(models.Model):
 
     class Meta:
         verbose_name = "course session"
+
+    def day_to_int(self):
+        """
+        Returns the integer form of the day where SUNDAY is 0 and the other Days
+        increment by 1 for each day pas sunday.
+        """
+        for i in range(0,len(self.DAYS_OF_WEEK_CHOICES)):
+            choice = self.DAYS_OF_WEEK_CHOICES[i][0]
+            if self.day == choice:
+                return i
