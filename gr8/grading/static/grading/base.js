@@ -21,6 +21,16 @@ function row_contains_str(row, string) {
 	return $(row).html().toUpperCase().indexOf(string.toUpperCase()) !== -1;
 }
 
+// returns an HTML dom object representing the chosen glyphicon
+function create_glyphicon(name, color) {
+	var span = document.createElement("SPAN");
+	span.className = "glyphicon " + name;
+	if (color) {
+		span.style="color:" + color + ";";
+	}
+	return span;
+}
+
 function filter_courses(str) {
 	$(".course-row").each(function() {
 		if (row_contains_str(this, str)) {

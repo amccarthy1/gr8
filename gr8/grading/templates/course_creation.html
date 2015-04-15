@@ -32,10 +32,33 @@
             </tr>
         </div>
         {% endfor %}
-        <tr><td></td><td><button class="btn btn-md btn-primary" type="button" onclick="click_button()">Create Course</button></td></tr>
     </table>
 </form>
-
+<h3>
+    Course Sessions:
+</h3>
+<table class="bootstrap-table">
+    <tbody id="session-table">
+        <tr class="session-header">
+            <td class="dow">M</th>
+            <td class="dow">T</th>
+            <td class="dow">W</th>
+            <td class="dow">R</th>
+            <td class="dow">F</th>
+            <td class="dow">S</th>
+            <td class="dow">U</th>
+            <td class="start-time-header">Start Time</th>
+            <td class="end-time-header">End Time</th>
+            <td class="room-header">Room</th>
+            <td class="sign">
+                <a href="javascript:;">
+                    <span id="session-add-button" class="glyphicon glyphicon-plus-sign" style="color:green;"></span>
+                </a>
+            </td><!--last td is for +/- icons-->
+        </tr>
+    </tbody>
+</table>
+<button class="btn btn-md btn-primary" type="button" onclick="click_button()">Create Course</button>
 
 
 <h2 id="status"></h2>

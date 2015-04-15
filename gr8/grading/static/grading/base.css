@@ -102,3 +102,16 @@
 #course-code {
   width: 20%;
 }
+.dow {
+  width: 20px;
+  text-align: center;
+}
+.sign {
+  width: 20px;
+  text-align: center;
+  font-size: 16px;
+}
+.session-header td {
+  font-weight: bold;
+  font-size: 16px;
+}

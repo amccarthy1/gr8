@@ -110,6 +110,80 @@ function click_button() {
     }
 }
 
+//////////////////////////////////////
+// course session adding functionality
+
+function make_checkbox_cell(name) {
+    var cell = document.createElement("TD");
+    cell.className = "form-group";
+    var div = document.createElement("DIV");
+    div.className = "entry";
+    cell.style = "text-align: center;";
+    var checkbox = document.createElement("INPUT");
+    checkbox.type = "checkbox";
+    checkbox.name = name;
+    checkbox.value = false;
+    div.appendChild(checkbox);
+    cell.appendChild(div);
+    return cell;
+}
+
+function make_text_cell(name, placeholder) {
+    var cell = document.createElement("TD");
+    cell.className = "form-group";
+    var div = document.createElement("DIV");
+    div.className = "entry";
+    var textbox = document.createElement("INPUT");
+    textbox.type = "text";
+    textbox.name = name;
+    textbox.value = null;
+    if (placeholder) {
+        textbox.placeholder = placeholder;
+    }
+    div.appendChild(textbox);
+    cell.appendChild(div);
+    return cell;
+}
+
+function make_minus_cell() {
+    var cell = document.createElement("TD");
+    cell.className = "sign";
+    var a = document.createElement("A");
+    a.href="javascript:;";
+    a.appendChild(create_glyphicon("glyphicon-minus-sign", "red", 20));
+    cell.appendChild(a);
+    $(a).click(function() {
+        var row = this.parentNode.parentNode;
+        document.getElementById('session-table').removeChild(row);
+    });
+    return cell;
+}
+
+function make_session_row(minus) {
+    // construct the row
+    var row = document.createElement("TR");
+    var cell;
+
+    // do some cells
+    row.appendChild(make_checkbox_cell("monday"));
+    row.appendChild(make_checkbox_cell("tuesday"));
+    row.appendChild(make_checkbox_cell("wednesday"));
+    row.appendChild(make_checkbox_cell("thursday"));
+    row.appendChild(make_checkbox_cell("friday"));
+    row.appendChild(make_checkbox_cell("saturday"));
+    row.appendChild(make_checkbox_cell("sunday"));
+    // do the cells with times
+    row.appendChild(make_text_cell("start-time", 'HH:MM'));
+    row.appendChild(make_text_cell("end-time", 'HH:MM'));
+    row.appendChild(make_text_cell("room", "Room"));
+    if (minus) {
+        row.appendChild(make_minus_cell());
+    }
+    return row;
+}
+
+
+// on load
 $(document).ready(function() {
     document.getElementById('id_code').addEventListener("keyup", function() {
         clearTimeout(pending_lookup); // wait until the user is finished typing.
@@ -119,5 +193,10 @@ $(document).ready(function() {
         if (e.keyCode === 13) {
             click_button();
         }
+    });
+
+    document.getElementById('session-table').appendChild(make_session_row());
+    $("#session-add-button").click(function() {
+        document.getElementById('session-table').appendChild(make_session_row(true));
     });
 });
