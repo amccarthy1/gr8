@@ -1,4 +1,3 @@
-var pending_lookup;
 $(".course-row").click(function() {
     window.location = "/course/" + this.id;
 });
@@ -31,13 +30,3 @@ function filter_courses(str) {
 		}
 	});
 }
-
-
-document.getElementById('searchbox').addEventListener("keyup", function() {
-	filter_courses($('#searchbox').val());
-});
-
-document.getElementById('id_code').addEventListener("keyup", function() {
-	clearTimeout(pending_lookup); // wait until the user is finished typing.
-	pending_lookup = setTimeout(function() {update_course_name($("#id_code").val(), 'found-course-name');}, 1000);
-});

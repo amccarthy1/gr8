@@ -3,7 +3,9 @@
 
 <h1>Shopping Cart</h1>
 {% if cart_courses.count %}
-<hr/>
+<hr />
+<input type="text" class="form-control" id="searchbox" placeholder="Enter Search Term" />
+<hr />
 <div class="row course-header">
     <div class="col-md-2">Code</div>
     <div class="col-md-3">Course Name</div>
@@ -12,6 +14,7 @@
     <div class="col-md-1">Credits</div>
     <div class="col-md-2">Term</div>
 </div>
+
 {% for enrolled_in in cart_courses %}
 <div class="row course-row" id="{{ enrolled_in.course.id }}">
     <div class="col-md-2 course-code course-col">
@@ -39,3 +42,6 @@
 <h2>Your shopping cart is empty. Add some courses to see them here!</h2>
 {% endif %}
 {% endblock content %}
+{% block extrascripts %}
+<script src="/static/grading/course_list.js"></script>
+{% endblock extrascripts %}

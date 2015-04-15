@@ -7,7 +7,9 @@ List of Courses
     <h1>
         {{ header }}
     </h1>
-    <input type="text" class="form-control" id="searchbox" placeholder="Enter Search Terms" />
+    <hr />
+    <input type="text" class="form-control" id="searchbox" placeholder="Enter Search Term" />
+    <hr />
     {% endif %}
     <div class="row course-header">
         <div class="col-md-2">Code</div>
@@ -40,3 +42,6 @@ List of Courses
     </div>
     {% endfor %}
 {% endblock content %}
+{% block extrascripts %}
+<script src="/static/grading/course_list.js"></script>
+{% endblock extrascripts %}

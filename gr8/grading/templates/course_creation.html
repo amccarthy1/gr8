@@ -2,22 +2,18 @@
 {% block content %} 
 
 <h1>Create a Course</h1>
-<form action="{% url 'grading:course_creation' %}" method="post">
-	{% csrf_token %}
-	<table class="bootstrap-table">
-    	{% csrf_token %}
+<form id="course-form" action="{% url 'grading:course_creation' %}" method="post">
+    <table class="bootstrap-table">
+        {% csrf_token %}
         <div class="form-group">
             <tr>
                 <td class="col-left"><label for="id_code">Code:</label></td>
-                 <td class="col-right entry {% if invalid_course_code %}entry-error{% endif %}" id="course-code">
-                    <input type="text" id="id_code" name="code" maxlength="10" value="{{ code }}" />
+                 <td class="col-right entry" id="course-code">
+                    <input type="text" id="id_code" name="code" maxlength="10" />
                 </td>
-                <td class="col-right" id="found-course-name">
-                    {% if invalid_course_code %}
-                        <span class="text-danger">Course code not found</span>
-                    {% else %}
-                        {{ code.name }}
-                    {% endif %}
+                <td class="col-right">
+                    <span id="found-course-name"></span>
+                    <div id="code-errors" class="text-danger"></div>
                 </td>
             </tr>
         </div>
@@ -28,27 +24,24 @@
                 {{ field }}
             {% else %}
                 <td class="col-left">{{ field.label_tag }}</td>
-                <td class="col-right entry {% if field.errors.0 %}entry-error{% endif %}" colspan=2>
+                <td class="col-right entry" colspan=2>
                     {{ field }}
-                    <div class="text-danger">{{ field.errors.0 }}</div>
+                    <div id="{{ field.name }}-errors" class="text-danger"></div>
                 </td>
-                <td class="text-danger">{{ field.errors.0 }}</td>
             {% endif %}
             </tr>
         </div>
         {% endfor %}
-        <tr><td><td><input class="btn btn-md btn-primary" type="submit" value="Create Course" /></tr></td></td>
+        <tr><td></td><td><button class="btn btn-md btn-primary" type="button" onclick="click_button()">Create Course</button></td></tr>
     </table>
-
-
 </form>
 
-{% if success %}
-<h2>Course Created!</h2>
-{% endif %}
-{% if failure %}
-<h2>Error, Course Not Created.</h2>
-{% endif %}
+
+
+<h2 id="status"></h2>
 
 
 {% endblock content %}
+{% block extrascripts %}
+<script src="/static/grading/course_creation.js"></script>
+{% endblock extrascripts %}
