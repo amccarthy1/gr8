@@ -25,17 +25,17 @@ $('#calendar').fullCalendar({
         center: '',
         right: ''
     },
-    defaultView : "basicWeek",
+    defaultView : "agendaWeek",
     views: {
         week: {
             columnFormat: "ddd"
         }
     },
-    events : {
+    events : [
         {% for session in sessions %}
-            {{session|safe}}
+            {{session|safe}},
         {% endfor %}
-    }
+    ]
 });
 
 </script>

@@ -3,6 +3,8 @@ from grading.models import *
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+import datetime
+from django.utils import timezone
 
 
 def view_home(request):
@@ -145,8 +147,15 @@ def schedule(request):
 
     enrolled_ins = profile.get_current_enrolled()
 
+    #build list of this weeks days' dates
+    weekDates = []
+    today = timezone.now()
+    for i in range(-1 - today.weekday(), 8 - today.weekday()):
+        date = today + datetime.timedelta(days=i)
+        dateString = date.strftime("%Y-%m-%d")
+        weekDates.append(dateString)
+
     #make a list of json to be rendered as schedule items
-    default_date = "2015-01-04"#first sunday of the year, don't be curious about this
     sessions = []
     for enrolled_in in enrolled_ins:
         #get all sessions for this course
@@ -156,13 +165,15 @@ def schedule(request):
         for course_session in course_sessions:
             #grab the string of the title, startTime, and endTime
             title = str(course_session.course)
-            startTime = course_session.start_time.strftime("%H:%M:%S")
-            endTime = course_session.end_time.strftime("%H:%M:%S")
-            #get the number day it is
-            day = str(course_session.day_to_int())
 
-            #format the json, day, star
-            session = "{ title: '%s' , day: %s, startTime: '%s', endTime: '%s' }" % (title, day, startTime, endTime)
+            date = weekDates[course_session.day_to_int()]
+            #T seperates date from time for fullcalendar's format
+            start = date + 'T' + course_session.start_time.strftime("%H:%M:%S")
+            end = date + 'T' + course_session.end_time.strftime("%H:%M:%S")
+
+            #format the json with date, start, end
+            #date should be of format YYYY-MM-DDTHH:MM:SS
+            session = "{ title: '%s', start: '%s', end: '%s' }" % (title, start, end)
             sessions.append(session)
 
     return render(request, "my_schedule.html", {'sessions' : sessions})
