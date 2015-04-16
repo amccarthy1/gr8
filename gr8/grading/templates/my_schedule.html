@@ -31,7 +31,11 @@ $('#calendar').fullCalendar({
             columnFormat: "ddd"
         }
     },
-
+    events : {
+        {% for session in sessions %}
+            {{session|safe}}
+        {% endfor %}
+    }
 });
 
 </script>
