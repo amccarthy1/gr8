@@ -164,7 +164,7 @@ def schedule(request):
         #jsonify all course sessions
         for course_session in course_sessions:
             #grab the string of the title, startTime, and endTime
-            title = str(course_session.course)
+            title = str(course_session.course) + " " + str(course_session.course.get_prof()) + " " + str(course_session.room)
 
             date = weekDates[course_session.day_to_int()]
             #T seperates date from time for fullcalendar's format
