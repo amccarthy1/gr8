@@ -44,6 +44,13 @@
     {% csrf_token %}
     <input class="btn btn-primary" type="submit" name="check_conflicts" value="Check Conflicts Against Google Calendar">
 </form>
+
+{% if conflict_dict %}
+<h2>Here are your conflicts:</h2>
+{% for session, event in conflict_dict.items %}
+<p>{{ session }} : {{ event.summary }} </p>
+{% endfor %}
+{% endif %}
 {% else %}
 <h2>Your shopping cart is empty. Add some courses to see them here!</h2>
 {% endif %}

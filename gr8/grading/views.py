@@ -206,8 +206,17 @@ def shopping_bag(request):
                     sessions = enrolled_in.course.course_session_set.all()
                     for session in sessions:
                         day = session.day
-                        # i.e. convert 'FRI' to 'FR'
-                        day_formatted = day[0:2].upper()
+                        day_of_week_dict = {
+                            "U" : "SU",
+                            "M" : "MO",
+                            "T" : "TU",
+                            "W" : "WE",
+                            "R" : "TH",
+                            "F" : "FR",
+                            "S" : "SA",
+                        }
+                        # i.e. convert 'F' to 'FR'
+                        day_formatted = day_of_week_dict[day]
                         if day_formatted in recurring_events_dict:
                             for recurring_event in recurring_events_dict[day_formatted]:
                                 # r_start and r_end are dictionaries
@@ -221,7 +230,6 @@ def shopping_bag(request):
                                 r_end_time_formatted = datetime.datetime.strptime(r_end_timestamp[start_index + 1 : start_index + 9], "%H:%M:%S").time()
                                 if ((r_start_time_formatted >= session.start_time) and (r_start_time_formatted <= session.end_time)) or ((r_start_time_formatted >= session.start_time) and (r_end_time_formatted >= session.end_time)):
                                     conflict_dict[session] = recurring_event
-
 
                 context = {
                     'profile' : profile,
