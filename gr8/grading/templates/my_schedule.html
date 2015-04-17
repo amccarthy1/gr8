@@ -6,8 +6,10 @@
 {% endblock head %}
 
 {% block content %}
-
+<h1>Your Schedule For This Term</h1>
+<h4>Click Any Class To Get More Information About it</h4>
 <div id='calendar'></div>
+<br>
 
 {% endblock content %}
 
@@ -27,6 +29,7 @@ $('#calendar').fullCalendar({
     },
     defaultView : "agendaWeek",
     contentHeight: 'auto',
+    slotDuration : '00:15:00',
     minTime : "07:00:00",
     maxTime : "23:30:00",
     allDaySlot : false,
@@ -40,7 +43,14 @@ $('#calendar').fullCalendar({
         {% for session in sessions %}
             {{session|safe}},
         {% endfor %}
-    ]
+    ],
+    eventRender: function(event, element) {
+            element.find('.fc-title').append("<br/>" + event.description);
+        },
+     eventClick: function(calEvent, jsEvent, view) {
+        window.location = "http://localhost/course/" + calEvent.id;
+
+    }
 });
 
 </script>
