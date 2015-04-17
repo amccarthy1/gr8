@@ -163,6 +163,42 @@ class Course(models.Model):
     def get_sessions(self):
         return Course_Session.objects.filter(course=self)
 
+    def get_course_times(self):
+
+        # a dictionary with keys of start time concatenated with end time with a list of days in abbreviated form
+        times = {}
+
+        sessions = self.get_sessions()
+
+        for session in sessions:
+
+            # if the start and end time is already in the dictionary, add the day to the correct spot in the keys list
+            if (session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p")) in times:
+                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))][session.day_to_int()] = session.get_abbrev()
+
+            # else create the time and end time in the dictionary
+            else:
+                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))] = ["","","","","","",""]
+                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))][session.day_to_int()] = session.get_abbrev()
+
+        timesStr = ""
+        counter = 0
+
+        # loop over all start and end time keys
+        for time in times:
+
+            # for the day abbreviation in the keys list, append it to a string
+            for day in times[time]:
+                timesStr += day
+
+            timesStr += " " + str(time)
+            if counter < len(times) -1:
+                timesStr += "<br/>"
+
+            counter +=1
+
+        return timesStr
+
 
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
@@ -193,13 +229,13 @@ class Room(models.Model):
 
 class Course_Session(models.Model):
     #Days of the week definitions
-    SUNDAY = "SUN"
-    MONDAY = "MON"
-    TUESDAY = "TUES"
-    WEDNESDAY = "WED"
-    THURSDAY = "THURS"
-    FRIDAY = "FRI"
-    SATURDAY = "SAT"
+    SUNDAY = "U"
+    MONDAY = "M"
+    TUESDAY = "T"
+    WEDNESDAY = "W"
+    THURSDAY = "R"
+    FRIDAY = "F"
+    SATURDAY = "S"
     DAYS_OF_WEEK_CHOICES = (
         (SUNDAY, 'Sunday'),
         (MONDAY, 'Monday'),
@@ -209,6 +245,7 @@ class Course_Session(models.Model):
         (FRIDAY, 'Friday'),
         (SATURDAY, 'Saturday')
     )
+
     course = models.ForeignKey(Course)
     room = models.ForeignKey(Room)
     start_time = models.TimeField('start time')
@@ -231,3 +268,7 @@ class Course_Session(models.Model):
             choice = self.DAYS_OF_WEEK_CHOICES[i][0]
             if self.day == choice:
                 return i
+
+    def get_abbrev(self):
+        return self.DAYS_OF_WEEK_CHOICES[self.day_to_int()][0]
+

@@ -6,53 +6,49 @@
 <hr />
 <input type="text" class="form-control" id="searchbox" placeholder="Enter Search Term" />
 <hr />
-<div class="row course-header">
-    <div class="col-md-2">Code</div>
-    <div class="col-md-3">Course Name</div>
-    <div class="col-md-1">Section</div>
-    <div class="col-md-3">Instructor</div>
-    <div class="col-md-1">Credits</div>
-    <div class="col-md-2">Term</div>
-</div>
+<div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Section</th>
+                    <th>Enrollment</th>
+                    <th>Instructor</th>
+                    <th>Credits</th>
+                    <th>Term</th>
+                    <th>Days & Times</th>
+                </tr>
+            </thead>
+        <tbody>
 
-{% for enrolled_in in cart_courses %}
-<div class="row course-row" id="{{ enrolled_in.course.id }}">
-    <div class="col-md-2 course-code course-col">
-        {{ enrolled_in.course.course_code }}
-    </div>
-    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
-        {{ enrolled_in.course.name }}
-    </a></div>
-    <div class="col-md-1 course-section course-col">
-        {{ enrolled_in.course.section }}
-    </div>
-    <div class="col-md-3 course-instructor course-col">
-        {{ enrolled_in.course.get_prof }}
-    </div>
-    <div class="col-md-1 course-credits course-col">
-        {{ enrolled_in.course.credits }}
-    </div>
-    <div class="col-md-2 course-term course-col">
-        {{ enrolled_in.course.term }}
-    </div>
-</div>
+           {% for enrolled_in in cart_courses %}
 
-{% endfor %}
+            <tr class="course-row" id="{{ enrolled_in.course.id }}">
+                <td>{{ enrolled_in.course.course_code }}</td>
+                <td>{{ enrolled_in.course.name }}</td>
+                <td>{{ enrolled_in.course.section }}</td>
+                <td>{{ enrolled_in.course.get_enrollment }}/{{ enrolled_in.course.capacity }}</td>
+                <td>{{ enrolled_in.course.get_prof }}</td>
+                <td>{{ enrolled_in.course.credits }}</td>
+                <td>{{ enrolled_in.course.term }}</td>
+                <td>{{ enrolled_in.course.get_course_times|safe }}</td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 <form action="{% url 'grading:cart' %}" method="POST">
-{% csrf_token %}
-
-<input class="btn btn-primary" type="submit" name="check_conflicts" value="Check Conflicts">
+    {% csrf_token %}
+    <input class="btn btn-primary" type="submit" name="check_conflicts" value="Check Conflicts Against Google Calendar">
 </form>
 {% else %}
 <h2>Your shopping cart is empty. Add some courses to see them here!</h2>
 {% endif %}
 
-{% if conflict_dict %}
-<h2>Here are your conflicts:</h2>
-{% for session, event in conflict_dict.items %}
-<p>{{ session }} : {{ event.summary }} </p>
-{% endfor %}
-{% endif %}
+
 
 {% endblock content %}
 {% block extrascripts %}

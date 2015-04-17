@@ -11,74 +11,80 @@
 <hr/>
 <h2>Enrolled Courses:</h2>
 
-<div class="row course-header">
-    <div class="col-md-2">Code</div>
-    <div class="col-md-3">Course Name</div>
-    <div class="col-md-1">Section</div>
-    <div class="col-md-3">Instructor</div>
-    <div class="col-md-1">Credits</div>
-    <div class="col-md-2">Term</div>
-</div>
-{% for enrolled_in in enrolled_ins %}
-<div class="row course-row" id="{{ enrolled_in.course.id }}">
-    <div class="col-md-2 course-code course-col">
-        {{ enrolled_in.course.course_code }}
-    </div>
-    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' enrolled_in.course.id %}">
-        {{ enrolled_in.course.name }}
-    </a></div>
-    <div class="col-md-1 course-section course-col">
-        {{ enrolled_in.course.section}}
-    </div>
-    <div class="col-md-3 course-instructor course-col">
-        {{ enrolled_in.course.get_prof }}
-    </div>
-    <div class="col-md-1 course-credits course-col">
-        {{ enrolled_in.course.credits }}
-    </div>
-    <div class="col-md-2 course-term course-col">
-        {{ enrolled_in.course.term }}
-    </div>
-</div>
+<div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Section</th>
+                    <th>Enrollment</th>
+                    <th>Instructor</th>
+                    <th>Credits</th>
+                    <th>Term</th>
+                    <th>Days & Times</th>
+                </tr>
+            </thead>
+        <tbody>
 
-{% endfor %}{% endif %}
+           {% for enrolled_in in enrolled_ins %}
+
+            <tr class="course-row" id="{{ enrolled_in.course.id }}">
+                <td>{{ enrolled_in.course.course_code }}</td>
+                <td>{{ enrolled_in.course.name }}</td>
+                <td>{{ enrolled_in.course.section }}</td>
+                <td>{{ enrolled_in.course.get_enrollment }}/{{ enrolled_in.course.capacity }}</td>
+                <td>{{ enrolled_in.course.get_prof }}</td>
+                <td>{{ enrolled_in.course.credits }}</td>
+                <td>{{ enrolled_in.course.term }}</td>
+                <td>{{ enrolled_in.course.get_course_times|safe }}</td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endif %}
 {% if professor_of.count %}
 <hr/>
 
 <h2>Teaching Courses:</h2>
 
-<div class="row course-header">
-    <div class="col-md-2">Code</div>
-    <div class="col-md-3">Course Name</div>
-    <div class="col-md-1">Section</div>
-    <div class="col-md-3">Instructor</div>
-    <div class="col-md-1">Credits</div>
-    <div class="col-md-2">Term</div>
-</div>
-{%  for course in professor_of %}
-<div class="row course-row" id="{{ course.id }}">
-    <div class="col-md-2 course-code course-col">
-        {{ course.course_code }}
-    </div>
-    <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' course.id %}">
-        {{ course.name }}
-    </a></div>
-    <div class="col-md-1">
-        {{ course.section }}
-    </div>
-    <div class="col-md-3 course-instructor course-col">
-        {{ course.get_prof }}
-    </div>
-    <div class="col-md-1 course-credits course-col">
-        {{ course.credits }}
-    </div>
-    <div class="col-md-2 course-term course-col">
-        {{ course.term }}
-    </div>
-</div>
+<div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Section</th>
+                    <th>Enrollment</th>
+                    <th>Instructor</th>
+                    <th>Credits</th>
+                    <th>Term</th>
+                    <th>Days & Times</th>
+                </tr>
+            </thead>
+        <tbody>
 
-{% endfor %}{% endif %}
+           {% for course in professor_of %}
 
+            <tr class="course-row" id="{{ course.id }}">
+                <td>{{ course.course_code }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.section }}</td>
+                <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
+                <td>{{ course.get_prof }}</td>
+                <td>{{ course.credits }}</td>
+                <td>{{ course.term }}</td>
+                <td>{{ course.get_course_times|safe }}</td>
+            </tr>
 
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endif %}
 
 {% endblock content %}

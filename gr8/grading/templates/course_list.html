@@ -11,36 +11,46 @@ List of Courses
     <input type="text" class="form-control" id="searchbox" placeholder="Enter Search Term" />
     <hr />
     {% endif %}
-    <div class="row course-header">
-        <div class="col-md-2">Code</div>
-        <div class="col-md-3">Course Name</div>
-        <div class="col-md-1">Section</div>
-        <div class="col-md-3">Instructor</div>
-        <div class="col-md-1">Credits</div>
-        <div class="col-md-2">Term</div>
+    <div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Section</th>
+                    <th>Enrollment</th>
+                    <th>Instructor</th>
+                    <th>Credits</th>
+                    <th>Term</th>
+                    <th>Days & Times</th>
+                </tr>
+            </thead>
+        <tbody>
+
+           {% for course in courses %}
+
+            <tr class="course-row" id="{{ course.id }}">
+                <td>{{ course.course_code }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.section }}</td>
+                <td>{{ course.get_enrollment }}/{{ course.capacity }}</td>
+                <td>{{ course.get_prof }}</td>
+                <td>{{ course.credits }}</td>
+                <td>{{ course.term }}</td>
+                <td>{{ course.get_course_times|safe }}</td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% for course in courses %}
-    <div class="row course-row" id="{{ course.id }}">
-        <div class="col-md-2 course-code course-col">
-            {{ course.course_code }}
-        </div>
-        <div class="col-md-3 course-name course-col"><a href="{% url 'grading:info' course.id %}">
-            {{ course.name }}
-        </a></div>
-        <div class="col-md-1">
-            {{ course.section }}
-        </div>
-        <div class="col-md-3 course-instructor course-col">
-            {{ course.get_prof }}
-        </div>
-        <div class="col-md-1 course-credits course-col">
-            {{ course.credits }}
-        </div>
-        <div class="col-md-2 course-term course-col">
-            {{ course.term }}
-        </div>
-    </div>
-    {% endfor %}
+
+    {% if message %}
+    <h2>
+        {{ message }}
+    </h2>
+    {% endif %}
+
 {% endblock content %}
 {% block extrascripts %}
 <script src="/static/grading/course_list.js"></script>
