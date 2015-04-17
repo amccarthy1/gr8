@@ -304,7 +304,7 @@ def googleLogin(request):
         test_time = str(datetime.datetime.now().isoformat('T')) + "-05:00"
         events = service.events().list(calendarId='primary', timeMin=test_time).execute()
 
-        return render(request, "google_activity.html", {"activitylist" : events})
+        return render(request, "index.html", {})
 
 
 @login_required
