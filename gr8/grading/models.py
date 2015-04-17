@@ -1,6 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from oauth2client.django_orm import FlowField
+from oauth2client.django_orm import CredentialsField
+import pickle
+import base64
+
+class CredentialsModel(models.Model):
+    id = models.ForeignKey(User, primary_key=True)
+    credential = CredentialsField()
+
+    def __str__(self):
+        return "Credentials for " + str(self.id)
 
 class Department(models.Model):
     name = models.CharField('name', max_length=40, unique=True)
