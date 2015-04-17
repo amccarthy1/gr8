@@ -4,6 +4,7 @@ settings.py
 *.db
 migrations/
 !migrations/__init__.py
+client_secrets.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
