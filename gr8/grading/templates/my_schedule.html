@@ -47,10 +47,6 @@ $('#calendar').fullCalendar({
     eventRender: function(event, element) {
             element.find('.fc-title').append("<br/>" + event.description);
         },
-     eventClick: function(calEvent, jsEvent, view) {
-        window.location = "http://localhost/course/" + calEvent.id;
-
-    }
 });
 
 </script>

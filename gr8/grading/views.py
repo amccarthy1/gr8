@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from grading.models import *
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import Http404
-import datetime
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from grading.models import *
+import datetime
 
 
 def view_home(request):
@@ -167,6 +168,7 @@ def schedule(request):
             title = str(course_session.course)
             description = str(course_session.course.get_prof()) + "<br/>" + str(course_session.room)
 
+            url = reverse('grading:info', args=(course_session.course.id,))
             date = weekDates[course_session.day_to_int()]
             #T seperates date from time for fullcalendar's format
             start = date + 'T' + course_session.start_time.strftime("%H:%M:%S")
@@ -174,7 +176,7 @@ def schedule(request):
 
             #format the json with date, start, end
             #date should be of format YYYY-MM-DDTHH:MM:SS
-            session = "{ title: '%s', start: '%s', end: '%s', description: '%s', id: '%s' }" % (title, start, end, description,course_session.course.id )
+            session = "{ title: '%s', start: '%s', end: '%s', description: '%s', url: '%s', id: '%s' }" % (title, start, end, description, url, course_session.course.id )
             sessions.append(session)
 
     return render(request, "my_schedule.html", {'sessions' : sessions})
