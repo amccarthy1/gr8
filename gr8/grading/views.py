@@ -262,6 +262,12 @@ def schedule(request):
         dateString = date.strftime("%Y-%m-%d")
         weekDates.append(dateString)
 
+    #save the minimum time a class starts and the maximum time while grabbing course sessions
+    min_time_str = "08:00:00"
+    max_time_str = "18:00:00"
+    max_time = None
+    min_time = None
+
     #make a list of json to be rendered as schedule items
     sessions = []
     for enrolled_in in enrolled_ins:
@@ -270,10 +276,9 @@ def schedule(request):
 
         #jsonify all course sessions
         for course_session in course_sessions:
-            #grab the string of the title, startTime, and endTime
+            #grab all the data for the fullcalendar event
             title = str(course_session.course)
             description = str(course_session.course.get_prof()) + "<br/>" + str(course_session.room)
-
             url = reverse('grading:info', args=(course_session.course.id,))
             date = weekDates[course_session.day_to_int()]
             #T seperates date from time for fullcalendar's format
@@ -285,7 +290,23 @@ def schedule(request):
             session = "{ title: '%s', start: '%s', end: '%s', description: '%s', url: '%s'}" % (title, start, end, description, url)
             sessions.append(session)
 
-    return render(request, "my_schedule.html", {'sessions' : sessions})
+            #check if this is the new min or max time
+            if min_time is None or course_session.start_time < min_time:
+                min_time = course_session.start_time
+            if max_time is None or course_session.end_time > max_time:
+                max_time = course_session.end_time
+
+    #if the min/max are not None, change the min/max_time_str value to reflect that
+    if min_time is not None:
+        min_time_str = min_time.strftime("%H:%M:%S")
+    if max_time is not None:
+        max_time_str = max_time.strftime("%H:%M:%S")
+
+    return render(request, "my_schedule.html", {
+            'sessions' : sessions,
+            'min_time' : min_time_str,
+            'max_time' : max_time_str
+        })
 
 def googleLogin(request):
     storage = Storage(CredentialsModel, 'id', request.user, 'credential')
