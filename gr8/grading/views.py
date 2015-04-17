@@ -1,11 +1,29 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from grading.models import *
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 import datetime
 from django.utils import timezone
+from gr8 import settings
+import os
+import logging
+import httplib2
+from apiclient.discovery import build
+from oauth2client import xsrfutil
+from oauth2client.client import flow_from_clientsecrets, AccessTokenRefreshError
+from oauth2client.django_orm import Storage
 
+# CLIENT_SECRETS, name of a file containing the OAuth 2.0 information for this
+# application, including client_id and client_secret, which are found
+# on the API Access tab on the Google APIs
+# Console <http://code.google.com/apis/console>
+CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '..', 'client_secrets.json')
+
+FLOW = flow_from_clientsecrets(
+    CLIENT_SECRETS,
+    scope='https://www.googleapis.com/auth/calendar',
+    redirect_uri='http://localhost:8000/oauth2callback')
 
 def view_home(request):
     return render(request, "index.html")
@@ -125,10 +143,97 @@ def shopping_bag(request):
         raise Http404()
 
     if request.method == "POST":
-        my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
-        for enrolled_in in my_cart_courses:
-            enrolled_in.is_enrolled = True
-            enrolled_in.save()
+        if "check_conflicts" in request.POST:
+            profile = request.user.profile
+            if profile is None:
+                raise Http404()
+            storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+            credential = storage.get()
+            # if the user is not authenticated with google, authenticate
+            if credential is None or credential.invalid == True:
+                FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
+                                                           request.user)
+                authorize_url = FLOW.step1_get_authorize_url()
+                return HttpResponseRedirect(authorize_url)
+
+            else:
+
+                # user is authenticated with google at this point
+
+                # get my current shopping cartcourses
+                my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
+
+                # get calendar events
+                http = httplib2.Http()
+                http = credential.authorize(http)
+                service = build("calendar", "v3", http=http)
+
+                now_start_time = str(datetime.datetime.now().isoformat('T')) + "-05:00"
+                events = service.events().list(calendarId='primary', timeMin=now_start_time).execute()
+
+                # day of the week -> list of events
+                recurring_events_dict = {}
+
+                # course session -> calendar event
+                conflict_dict = {}
+
+                recurring_events = events.get('items', [])
+
+                
+                for item in events.get('items', []):
+                    # check if event is a recurring event
+                    if 'recurrence' in item:
+                        r_event = item
+                        recur_string = r_event['recurrence'][0]
+
+                        # recur_string looks like "'RRULE:FREQ=WEEKLY;UNTIL=20150515T140000Z;BYDAY=FR"
+                        day_string = ""
+                        start_index = recur_string.find('DAY=')
+                        # the day string is always 2 characters i.e. "FR", or "WE"
+                        day_string = recur_string[start_index + 4:start_index + 6 ]
+
+                        # add event to day key in dictionary
+                        if day_string in recurring_events_dict:
+                            recurring_events_dict[day_string].append(r_event)
+                        else:
+                            recurring_events_dict[day_string] = []
+                            recurring_events_dict[day_string].append(r_event)
+                        
+                        
+                for enrolled_in in my_cart_courses:
+                    sessions = enrolled_in.course.course_session_set.all()
+                    for session in sessions:
+                        day = session.day
+                        # i.e. convert 'FRI' to 'FR'
+                        day_formatted = day[0:2].upper()
+                        if day_formatted in recurring_events_dict:
+                            for recurring_event in recurring_events_dict[day_formatted]:
+                                # r_start and r_end are dictionaries
+                                r_start = recurring_event['start']
+                                r_end = recurring_event['end']
+                                r_start_timestamp = r_start['dateTime']
+                                r_end_timestamp = r_end['dateTime']
+                                start_index = r_start_timestamp.find('T')
+                                r_start_time_formatted = datetime.datetime.strptime(r_start_timestamp[start_index + 1 : start_index + 9], "%H:%M:%S").time()
+                                start_index = r_end_timestamp.find('T')
+                                r_end_time_formatted = datetime.datetime.strptime(r_end_timestamp[start_index + 1 : start_index + 9], "%H:%M:%S").time()
+                                if ((r_start_time_formatted >= session.start_time) and (r_start_time_formatted <= session.end_time)) or ((r_start_time_formatted >= session.start_time) and (r_end_time_formatted >= session.end_time)):
+                                    conflict_dict[session] = recurring_event
+
+
+                context = {
+                    'profile' : profile,
+                    'cart_courses' : my_cart_courses,
+                    'conflict_dict' : conflict_dict,
+                    'events' : recurring_events,
+                }
+
+                return render(request, "shopping_cart.html", context)
+        elif "enroll_all" in request.POST:
+            my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
+            for enrolled_in in my_cart_courses:
+                enrolled_in.is_enrolled = True
+                enrolled_in.save()
 
     my_cart_courses = profile.enrolled_in_set.filter(is_enrolled=False)
 
@@ -177,3 +282,33 @@ def schedule(request):
             sessions.append(session)
 
     return render(request, "my_schedule.html", {'sessions' : sessions})
+
+def googleLogin(request):
+    storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+    credential = storage.get()
+    if credential is None or credential.invalid == True:
+        FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
+                                                   request.user)
+        authorize_url = FLOW.step1_get_authorize_url()
+        return HttpResponseRedirect(authorize_url)
+
+    else:
+        http = httplib2.Http()
+        http = credential.authorize(http)
+        service = build("calendar", "v3", http=http)
+
+        test_time = str(datetime.datetime.now().isoformat('T')) + "-05:00"
+        events = service.events().list(calendarId='primary', timeMin=test_time).execute()
+
+        return render(request, "google_activity.html", {"activitylist" : events})
+
+
+@login_required
+def auth_return(request):
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.REQUEST['state'], 
+        request.user):
+        return  HttpResponseBadRequest()
+    credential = FLOW.step2_exchange(request.REQUEST)
+    storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+    storage.put(credential)
+    return HttpResponseRedirect("/")
