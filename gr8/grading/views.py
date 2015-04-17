@@ -25,7 +25,7 @@ CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '..', 'client_secrets.j
 FLOW = flow_from_clientsecrets(
     CLIENT_SECRETS,
     scope='https://www.googleapis.com/auth/calendar',
-    redirect_uri='http://localhost:8000/oauth2callback')
+    redirect_uri=settings.OAUTH_CALLBACK_URL)
 
 def view_home(request):
     return render(request, "index.html")

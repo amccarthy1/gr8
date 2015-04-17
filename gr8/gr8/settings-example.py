@@ -16,6 +16,8 @@ FONT_DIR = "fonts/"
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+OAUTH_CALLBACK_URL="http://localhost:8000/oauth2callback"
+
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     "django.core.context_processors.request",
 ) 
