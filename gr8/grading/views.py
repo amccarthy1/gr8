@@ -176,7 +176,7 @@ def schedule(request):
 
             #format the json with date, start, end
             #date should be of format YYYY-MM-DDTHH:MM:SS
-            session = "{ title: '%s', start: '%s', end: '%s', description: '%s', url: '%s', id: '%s' }" % (title, start, end, description, url, course_session.course.id )
+            session = "{ title: '%s', start: '%s', end: '%s', description: '%s', url: '%s'}" % (title, start, end, description, url)
             sessions.append(session)
 
     return render(request, "my_schedule.html", {'sessions' : sessions})
