@@ -173,13 +173,13 @@ class Course(models.Model):
         for session in sessions:
 
             # if the start and end time is already in the dictionary, add the day to the correct spot in the keys list
-            if (session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p")) in times:
-                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))][session.day_to_int()] = session.get_abbrev()
+            if (session.start_time.strftime("%I:%M %p")) + " - " + (session.end_time.strftime("%I:%M %p")) in times:
+                times[(session.start_time.strftime("%I:%M %p")) + " - " + (session.end_time.strftime("%I:%M %p"))][session.day_to_int()] = session.get_abbrev()
 
             # else create the time and end time in the dictionary
             else:
-                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))] = ["","","","","","",""]
-                times[(session.start_time.strftime("%I:%M:%p")) + " - " + (session.end_time.strftime("%I:%M:%p"))][session.day_to_int()] = session.get_abbrev()
+                times[(session.start_time.strftime("%I:%M %p")) + " - " + (session.end_time.strftime("%I:%M %p"))] = ["","","","","","",""]
+                times[(session.start_time.strftime("%I:%M %p")) + " - " + (session.end_time.strftime("%I:%M %p"))][session.day_to_int()] = session.get_abbrev()
 
         timesStr = ""
         counter = 0

@@ -33,6 +33,10 @@ Error: Course full, could not enroll.
             <td class="item-name">Term:</td>
             <td class="item-value">{{ course.term }}</td>
         </tr>
+        <tr>
+            <td class="item-name">Sessions:</td>
+            <td class="item-value" colspan=3>{{ course.get_course_times|safe }}</td>
+        </tr>
         {% if course.prereq_set.count %}
         <tr>
             <th colspan=4>
@@ -47,9 +51,9 @@ Error: Course full, could not enroll.
                 <td colspan=4>
                     {% if not is_enrolled %}
                         {% if is_in_cart %}
-                        <input class="btn btn-danger" type="submit" name="cart_remove" value="Remove from Bucket List"/>    
+                        <input class="btn btn-danger" type="submit" name="cart_remove" value="Remove from Cart"/>    
                         {% else %}
-                        <input class="btn btn-primary" type="submit" name="cart" value="Add to Bucket List"/>
+                        <input class="btn btn-primary" type="submit" name="cart" value="Add to Cart"/>
                         {% endif %}
                         {% if course.is_open %}
                         <input class="btn btn-success" type="submit" name="enroll" value="Enroll"/>
