@@ -59,7 +59,7 @@
 
            {% for session, event in conflict_dict.items %}
 
-            <tr class="course-row" id="{{ enrolled_in.course.id }}">
+            <tr class="course-row" id="{{ session.course.id }}">
                 <td>{{ session }}</td>
                 <td>{{ event.summary }}</td>
             </tr>
