@@ -272,3 +272,9 @@ class Course_Session(models.Model):
     def get_abbrev(self):
         return self.DAYS_OF_WEEK_CHOICES[self.day_to_int()][0]
 
+    # static method to look up the shortened day string.
+    def lookup_day(day):
+        for tup in Course_Session.DAYS_OF_WEEK_CHOICES:
+            if day.lower() == tup[1].lower():
+                return tup[0]
+        return None # and play the price is right losing horn.
