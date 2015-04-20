@@ -345,3 +345,19 @@ def auth_return(request):
     storage = Storage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
     return HttpResponseRedirect("/")
+
+@login_required
+def my_grades(request):
+    profile = request.user.profile
+    if profile is None:
+        raise Http404()
+
+    #get only current courses that the user is in
+    enrolled_ins = profile.get_enrolled_ins()
+
+    context = {
+        'request': request,
+        'enrolled_ins' : enrolled_ins,
+    }
+
+    return render(request, "my_grades.html", context)

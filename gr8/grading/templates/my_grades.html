@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>My Grades</h1>
+{% if enrolled_ins.count %}{% else %}
+        <h2>You are not enrolled in any courses!</h2>
+{% endif %}
+{% if enrolled_ins.count %}
+<hr/>
+
+<div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Course Name</th>
+                    <th>Code</th>
+                    <th>Instructor</th>
+                    <th>Term</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+        <tbody>
+
+           {% for enrolled_in in enrolled_ins %}
+
+            <tr class="course-row" id="{{ enrolled_in.course.id }}">
+                <td>{{ enrolled_in.course.name }}</td>
+                <td>{{ enrolled_in.course.course_code }}</td>
+                <td>{{ enrolled_in.course.get_prof }}</td>
+                <td>{{ enrolled_in.course.term }}</td>
+                <td>{{ enrolled_in.grade }}</td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endif %}
+
+
+{% endblock content %}

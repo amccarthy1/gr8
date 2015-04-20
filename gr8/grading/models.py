@@ -64,6 +64,11 @@ class Profile(models.Model):
             course__term__end_date__gt=now)
         return enrolled_ins
 
+    def get_enrolled_ins(self):
+        enrolled_ins = self.enrolled_in_set.filter(is_enrolled=True)
+        return enrolled_ins
+
+
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)
     department = models.ForeignKey(Department)
