@@ -47,9 +47,27 @@
 
 {% if conflict_dict %}
 <h2>Here are your conflicts:</h2>
-{% for session, event in conflict_dict.items %}
-<p>{{ session }} : {{ event.summary }} </p>
-{% endfor %}
+<div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+                <tr class="course-header bg-primary">
+                    <th>Course Session</th>
+                    <th>Calendar Event</th>
+                </tr>
+            </thead>
+        <tbody>
+
+           {% for session, event in conflict_dict.items %}
+
+            <tr class="course-row" id="{{ enrolled_in.course.id }}">
+                <td>{{ session }}</td>
+                <td>{{ event.summary }}</td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endif %}
 {% else %}
 <h2>Your shopping cart is empty. Add some courses to see them here!</h2>
