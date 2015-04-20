@@ -228,7 +228,7 @@ def shopping_bag(request):
                                 r_start_time_formatted = datetime.datetime.strptime(r_start_timestamp[start_index + 1 : start_index + 9], "%H:%M:%S").time()
                                 start_index = r_end_timestamp.find('T')
                                 r_end_time_formatted = datetime.datetime.strptime(r_end_timestamp[start_index + 1 : start_index + 9], "%H:%M:%S").time()
-                                if ((r_start_time_formatted >= session.start_time) and (r_start_time_formatted <= session.end_time)) or ((r_start_time_formatted >= session.start_time) and (r_end_time_formatted >= session.end_time)):
+                                if ((r_start_time_formatted >= session.start_time) and (r_start_time_formatted < session.end_time)) or ((r_start_time_formatted <= session.start_time) and (r_end_time_formatted >= session.end_time)) or ((r_start_time_formatted <= session.start_time) and (r_end_time_formatted <= session.end_time)):
                                     conflict_dict[session] = recurring_event
 
                 context = {
