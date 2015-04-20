@@ -44,6 +44,11 @@
     {% csrf_token %}
     <input class="btn btn-primary" type="submit" name="check_conflicts" value="Check Conflicts Against Google Calendar">
 </form>
+<br/>
+<form action="{% url 'grading:cart' %}" method="POST">
+    {% csrf_token %}
+    <input class="btn btn-primary" type="submit" name="enroll_all" value="Enroll All">
+</form>
 
 {% if conflict_dict %}
 <h2>Here are your conflicts:</h2>
