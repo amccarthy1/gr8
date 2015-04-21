@@ -70,10 +70,14 @@ Error: Course full, could not enroll.
     </tbody>
 </table>
 
-{% if is_professor %}
-<a class="btn btn-primary pull-right" href="{% url 'grading:course_grade' course.id request.user.profile.id %}">
+{% if is_professor and course.get_enrollment > 0 %}
+<a class="btn btn-primary pull-right" href="{% url 'grading:course_grade' course.id %}">
     Enter Grades
 </a>
+{% else %}
+<div class="tooltip-wrapper" data-title="There are no students enrolled to grade">
+<button class="btn btn-default" disabled>Enter Grades</button>
+</div>
 {% endif %}
 
 {% if not can_enroll and not is_professor %}
@@ -85,3 +89,6 @@ Error: Course full, could not enroll.
 {% endif %}
 
 {% endblock content %}
+{% block extrascripts %}
+<script src="/static/grading/base.js"></script>
+{% endblock extrascripts %}

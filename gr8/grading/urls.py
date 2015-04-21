@@ -21,7 +21,8 @@ urlpatterns = patterns('',
     url(r'^course/create$', create_course, name="course_creation"),
     url(r'^terms$',term_creation, name="term_creation"),
     url(r'^course/code/create$', create_course_code, name="create_course_code"),
-    url(r'^course/grade/(?P<course_id>\d+)/(?P<profile_id>\d+)$', course_grade, name="course_grade"),
+
+    url(r'^course/grade/(?P<course_id>\d+)$', course_grade, name="course_grade"),
 
     url(r'^ajax/', include(ajax_urls, namespace="ajax")), # Ajax functions defined in ajax.py
     url(r'^grades$', my_grades, name="my_grades"),

@@ -3,13 +3,20 @@ from .decorators import staff_required
 from .forms import *
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
 
-@staff_required
+@login_required
 def course_grade(request, course_id=0, profile_id=0):
-    p = get_object_or_404(Profile, pk=profile_id)
-    c = get_object_or_404(Course.get_current_courses(), pk=course_id, professor=p)
 
-    enrolled_ins = Enrolled_In.objects.filter(course=c)
+    profile = request.user.profile
+
+    if profile is None:
+        raise Http404()
+
+    # try to get the course, if the correct professor is not the logged in profile it will 404
+    c = get_object_or_404(Course.get_current_courses(), pk=course_id, professor=profile)
+
+    enrolled_ins = Enrolled_In.objects.filter(course=c,is_enrolled=True)
     #this should make students without grades first, then subsort by last name, first name
     enrolled_ins = enrolled_ins.extra(select={
         'grade_is_null' : 'grade IS NULL',

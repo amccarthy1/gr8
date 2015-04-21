@@ -2,6 +2,10 @@ $(".course-row").click(function() {
     window.location = "/course/" + this.id;
 });
 
+$(function() {
+    $('.tooltip-wrapper').tooltip({position: "left"});
+});
+
 function update_course_name(code, id) {
 	$.ajax({
 		url: '/ajax/lookup_code',
