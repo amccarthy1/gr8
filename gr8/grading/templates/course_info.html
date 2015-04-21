@@ -74,7 +74,7 @@ Error: Course full, could not enroll.
 <a class="btn btn-primary pull-right" href="{% url 'grading:course_grade' course.id %}">
     Enter Grades
 </a>
-{% else %}
+{% elif is_professor %}
 <div class="tooltip-wrapper" data-title="There are no students enrolled to grade">
 <button class="btn btn-default" disabled>Enter Grades</button>
 </div>
