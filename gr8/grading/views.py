@@ -261,6 +261,7 @@ def schedule(request):
         raise Http404()
 
     enrolled_ins = profile.get_current_enrolled()
+    recur_dict = {}
 
     #build list of this weeks days' dates
     weekDates = []
@@ -269,6 +270,47 @@ def schedule(request):
         date = today + datetime.timedelta(days=i)
         dateString = date.strftime("%Y-%m-%d")
         weekDates.append(dateString)
+
+    # calendar post
+    #if request.method == "POST":
+        # post scehdule to calendar
+    for enrolled_in in enrolled_ins:
+        course_sessions = enrolled_in.course.get_sessions()
+
+        for course_session in course_sessions:
+            recur_dict["summary"] = str(course_session.course)
+            recur_dict["location"] = str(course_session.room)
+            start_dict = {}
+            end_dict = {}
+            timeZone = "America/New_York"
+            start_dict["timeZone"] = timeZone
+            end_dict["timeZone"] = timeZone
+            day = course_session.day
+            day_of_week_dict = {
+                "U" : "SU",
+                "M" : "MO",
+                "T" : "TU",
+                "W" : "WE",
+                "R" : "TH",
+                "F" : "FR",
+                "S" : "SA",
+            }
+            # i.e. convert 'F' to 'FR'
+            day_formatted = day_of_week_dict[day]
+            date = weekDates[course_session.day_to_int()]
+            #T seperates date from time for fullcalendar's format
+            start = date + 'T' + course_session.start_time.strftime("%H:%M:%S")
+            end = date + 'T' + course_session.end_time.strftime("%H:%M:%S")
+            start_dict["dateTime"] = start
+            end_dict["dateTime"] = end
+            recur_dict["start"] = start_dict
+            recur_dict["end"] = end_dict
+
+            # 'recurrence': ['RRULE:FREQ=WEEKLY;UNTIL=20150529T130000Z;BYDAY=FR']
+            recur_list = []
+            rule_string = 'RRULE:FREQ=WEEKLY;UNTIL='
+
+            print(recur_dict)
 
     #save the minimum time a class starts and the maximum time while grabbing course sessions
     min_time_str = "08:00:00"
