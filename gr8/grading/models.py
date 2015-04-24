@@ -118,7 +118,7 @@ class Term(models.Model):
     def get_current_term():
         now = timezone.now()
         try:
-            return Course.objects.get(start_date__lt=now, end_date__gt=now)
+            return Term.objects.get(start_date__lt=now, end_date__gt=now)
         except:
             return None
 
