@@ -1,61 +1,84 @@
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
-from reportlab.pdfbase import pdfmetrics
 from gr8.settings import FONT_DIR
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Flowable, SimpleDocTemplate, Spacer
 import os
 
-inch = 72 # 1" = 72pt
-margin = inch * 3 / 4 # 3/4" margins
-width, height = A4 # Store width and height so we can do the right math.
-timestamp = None
+INCH = 72 # 1" = 72pt
+MARGIN = INCH * 3 / 4 # 3/4" margins
+PAGE_WIDTH, PAGE_HEIGHT = A4 # Store width and height so we can do the right math.
 TITLE_SIZE = 24
 SUBTITLE_SIZE = 12
 
+class Header(Flowable):
+    """
+    Draws a header containing Name, generated date, and other stuff.
+    """
+    def __init__(self, user, line_space=5):
+        Flowable.__init__(self)
+        self.line_space = line_space
+        self.user = user
+        self.height = TITLE_SIZE + SUBTITLE_SIZE + 2*line_space + 1
+        self.width = PAGE_WIDTH - 2 * MARGIN
+
+    def __repr__(self):
+        return "Header(w=%d,h=%d)" % (self.width, self.height)
+
+    def draw(self):
+        x = 0
+        y = self.height
+        name = self.user.first_name + " " + self.user.last_name
+        self.canv.setFillColorRGB(0, 0, 0)
+        date = timezone.now().strftime("%m/%d/%Y")
+        textobject = self.canv.beginText()
+        y -= TITLE_SIZE # Measured from bottom of text, not top.
+        textobject.setTextOrigin(x, y)
+        textobject.setFont("PTSans-Regular", TITLE_SIZE)
+        textobject.textLine(name)
+        self.canv.drawText(textobject)
+        # Unofficial Transcript
+        textobject = self.canv.beginText()
+        y -= SUBTITLE_SIZE # Measured from bottom of text, not top.
+        textobject.setTextOrigin(x, y)
+        textobject.setFont("PTSans-Italic", SUBTITLE_SIZE)
+        self.canv.setFillColorRGB(0.5, 0.5, 0.5)
+        textobject.textLine("Unofficial Transcript - Generated on %s" % date)
+        self.canv.drawText(textobject)
+
+        y -= self.line_space
+        self.canv.line(x, y, self.width, y)
+        y -= self.line_space
+
+@login_required
 def render_transcript(request):
-    timestamp = timezone.now()
-    #TODO render the actual transcript
+    """
+    Render all the components for the transcipt in order and render the
+    response.
+    """
+    #create the filename from the user and timestamp
+    timestamp = timezone.now().strftime("%m-%d-%Y")
+    filename = "%s-%s.pdf" % (request.user.username, timestamp)
+
+    #initialize the stuff.
     response = HttpResponse()
-    response['Content-Disposition'] = 'attachment;filename="%s-%s.pdf"' % (request.user.username, timestamp.strftime("%m-%d-%Y"))
+    response['Content-Disposition'] = 'attachment;filename=' + filename
+    story = []
+    doc = SimpleDocTemplate(response, pagesize=A4,
+        leftMargin=MARGIN, rightMargin=MARGIN,
+        topMargin=MARGIN, bottomMargin=MARGIN)
+    spacer = Spacer(0,0,0.25 * INCH)
 
-    p = canvas.Canvas(response, pagesize=A4)
-    # Draw the transcript's header at the top of the first page
-    x = margin
-    y = height - margin
-    x, y = draw_header(p, request.user, x, y)
+    #add components
+    story.append(Header(request.user))
+    #story.append(spacer)
 
-    p.showPage()
-    p.save()
+    doc.build(story)
+
     return response
-
-def draw_header(can, user, x, y):
-    """
-    Draws the header, and returns the position at which the next part of the document should be written
-    """
-    # TODO Add logo to top right corner
-    # TODO Account for page changes
-    name = user.first_name + " " + user.last_name
-    can.setFillColorRGB(0, 0, 0)
-    date = timezone.now().strftime("%m/%d/%Y")
-    textobject = can.beginText()
-    y -= TITLE_SIZE # Measured from bottom of text, not top.
-    textobject.setTextOrigin(x, y)
-    textobject.setFont("PTSans-Regular", TITLE_SIZE)
-    textobject.textLine(name)
-    can.drawText(textobject)
-    # Unofficial Transcript
-    textobject = can.beginText()
-    y -= SUBTITLE_SIZE # Measured from bottom of text, not top.
-    textobject.setTextOrigin(x, y)
-    textobject.setFont("PTSans-Italic", SUBTITLE_SIZE)
-    can.setFillColorRGB(0.5, 0.5, 0.5)
-    textobject.textLine("Unofficial Transcript - Generated on %s" % date)
-    can.drawText(textobject)
-    y -= 5
-    can.line(x, y, width-margin, y)
-    y -= 5
-    return (x, y)
 
 # Gets called on server startup
 # NOTE: Django has hooks for this in 1.7, but not 1.6
