@@ -114,6 +114,14 @@ class Term(models.Model):
                 season = choice[1]
         return "%s, %s" % (season, self.year)
 
+    # returns the currently active term object.
+    def get_current_term():
+        now = timezone.now()
+        try:
+            return Course.objects.get(start_date__lt=now, end_date__gt=now)
+        except:
+            return None
+
 
 class Course(models.Model):
     course_code = models.ForeignKey(Course_Code)
