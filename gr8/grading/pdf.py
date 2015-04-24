@@ -2,10 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
 from gr8.settings import FONT_DIR
+from .models import Course, Profile, Term, Enrolled_In
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfgen import canvas
-from reportlab.platypus import Flowable, SimpleDocTemplate, Spacer
+from reportlab.platypus import Flowable, SimpleDocTemplate, Spacer, Table, TableStyle
+import reportlab.lib.colors as colors
 import os
 
 INCH = 72 # 1" = 72pt
@@ -13,6 +15,24 @@ MARGIN = INCH * 3 / 4 # 3/4" margins
 PAGE_WIDTH, PAGE_HEIGHT = A4 # Store width and height so we can do the right math.
 TITLE_SIZE = 24
 SUBTITLE_SIZE = 12
+CONTENT_WIDTH = PAGE_WIDTH - 2 * MARGIN
+
+class Line(Flowable):
+    """
+    Draws a horizontal line in a flowable.
+    """
+
+    def __init__(self, width, height=0):
+        Flowable.__init__(self)
+        self.width = width
+        self.height = height
+
+    def __repr__(self):
+        return "Line(w=%d,h=%d)" % (self.width, self.height)
+
+    def draw(self):
+        self.canv.line(0,self.height, self.width, self.height)
+
 
 class Header(Flowable):
     """
@@ -22,8 +42,8 @@ class Header(Flowable):
         Flowable.__init__(self)
         self.line_space = line_space
         self.user = user
-        self.height = TITLE_SIZE + SUBTITLE_SIZE + 2*line_space + 1
-        self.width = PAGE_WIDTH - 2 * MARGIN
+        self.height = TITLE_SIZE + SUBTITLE_SIZE + line_space
+        self.width = CONTENT_WIDTH
 
     def __repr__(self):
         return "Header(w=%d,h=%d)" % (self.width, self.height)
@@ -49,9 +69,61 @@ class Header(Flowable):
         textobject.textLine("Unofficial Transcript - Generated on %s" % date)
         self.canv.drawText(textobject)
 
-        y -= self.line_space
-        self.canv.line(x, y, self.width, y)
-        y -= self.line_space
+        y -= self.line_space#add a space after the text and before the line.
+        line = Line(self.width)
+        line.drawOn(self.canv, x, y)
+
+class CoursesTable(Flowable):
+    """
+    Display a table of course info and grades
+    """
+
+    def __init__(self, enrolled_ins):
+        Flowable.__init__(self)
+        self.enrolled_ins = enrolled_ins
+        self.width = CONTENT_WIDTH
+        self.header_size = 16
+        self.text_size = 12
+        self.top_padding = 3
+        self.bottom_padding = 3
+        self.top_header_padding = 3
+        self.bottom_header_padding = 10
+        #Calculate the height of the entire table 
+        row_height = self.text_size + self.top_padding + self.bottom_padding
+        self.height = row_height * len(enrolled_ins)
+        self.height += self.header_size + self.top_header_padding + self.bottom_header_padding
+
+    def __repr__(self):
+        return "CourseTable(w=%d,h=%d)" % (self.width, self.height)
+
+    def draw(self):
+        #define the data grid
+        data = [['Course Code', 'Credits', 'Grade']]
+        #add each course to the data
+        for enrolled_in in self.enrolled_ins:
+            row = []
+            row.append(str(enrolled_in.course.course_code))
+            row.append(str(enrolled_in.course.credits))#TODO: this will change when credits are moved.
+            if enrolled_in.grade:
+                row.append(str(enrolled_in.grade))
+            else:
+                row.append(str("NC"))#Not Complete (no grade was entered)
+            data.append(row)
+        #build the table
+        table = Table(data)
+        #style the header differently
+        table.setStyle(TableStyle([
+            ('SIZE',(0,0),(-1,0),self.header_size),
+            ('BOTTOMPADDING', (0,0),(-1,0),self.bottom_header_padding),
+            ('TOPPADDING', (0,0),(-1,0), self.top_header_padding),
+            ('BACKGROUND',(0,0),(-1,0), colors.Color(.5,.5,.5,1)),
+            ('TEXTCOLOR', (0,0),(-1,0), colors.white),
+            ('BOTTOMPADDING', (0,1),(-1,0),self.bottom_padding),
+            ('TOPPADDING', (0,1), (-1,0), self.top_padding),
+            ]))
+        table.wrapOn(self.canv, 0, 0)
+        table.drawOn(self.canv, 0, 0)
+
 
 @login_required
 def render_transcript(request):
@@ -74,7 +146,8 @@ def render_transcript(request):
 
     #add components
     story.append(Header(request.user))
-    #story.append(spacer)
+    story.append(spacer)
+    story.append(CoursesTable(request.user.profile.get_current_enrolled()))#TODO: Fix this
 
     doc.build(story)
 
