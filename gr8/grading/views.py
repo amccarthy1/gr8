@@ -256,6 +256,9 @@ def shopping_bag(request):
 
 @login_required
 def schedule(request):
+
+    calendar_post_success = False
+    made_post = False
     profile = request.user.profile
     if profile is None:
         raise Http404()
@@ -272,45 +275,85 @@ def schedule(request):
         weekDates.append(dateString)
 
     # calendar post
-    #if request.method == "POST":
-        # post scehdule to calendar
-    for enrolled_in in enrolled_ins:
-        course_sessions = enrolled_in.course.get_sessions()
+    if request.method == "POST":
+        # post schedule to calendar
+        made_post = True
 
-        for course_session in course_sessions:
-            recur_dict["summary"] = str(course_session.course)
-            recur_dict["location"] = str(course_session.room)
-            start_dict = {}
-            end_dict = {}
-            timeZone = "America/New_York"
-            start_dict["timeZone"] = timeZone
-            end_dict["timeZone"] = timeZone
-            day = course_session.day
-            day_of_week_dict = {
-                "U" : "SU",
-                "M" : "MO",
-                "T" : "TU",
-                "W" : "WE",
-                "R" : "TH",
-                "F" : "FR",
-                "S" : "SA",
-            }
-            # i.e. convert 'F' to 'FR'
-            day_formatted = day_of_week_dict[day]
-            date = weekDates[course_session.day_to_int()]
-            #T seperates date from time for fullcalendar's format
-            start = date + 'T' + course_session.start_time.strftime("%H:%M:%S")
-            end = date + 'T' + course_session.end_time.strftime("%H:%M:%S")
-            start_dict["dateTime"] = start
-            end_dict["dateTime"] = end
-            recur_dict["start"] = start_dict
-            recur_dict["end"] = end_dict
+        storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+        credential = storage.get()
+        # if the user is not authenticated with google, authenticate
+        if credential is None or credential.invalid == True:
+            FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
+                                                       request.user)
+            authorize_url = FLOW.step1_get_authorize_url()
+            return HttpResponseRedirect(authorize_url)
 
-            # 'recurrence': ['RRULE:FREQ=WEEKLY;UNTIL=20150529T130000Z;BYDAY=FR']
-            recur_list = []
-            rule_string = 'RRULE:FREQ=WEEKLY;UNTIL='
+        else:
 
-            print(recur_dict)
+            for enrolled_in in enrolled_ins:
+                course_sessions = enrolled_in.course.get_sessions()
+
+                for course_session in course_sessions:
+                    recur_dict["summary"] = str(course_session.course)
+                    recur_dict["location"] = str(course_session.room)
+                    start_dict = {}
+                    end_dict = {}
+                    timeZone = "America/New_York"
+                    start_dict["timeZone"] = timeZone
+                    end_dict["timeZone"] = timeZone
+                    day = course_session.day
+                    day_of_week_dict = {
+                        "U" : "SU",
+                        "M" : "MO",
+                        "T" : "TU",
+                        "W" : "WE",
+                        "R" : "TH",
+                        "F" : "FR",
+                        "S" : "SA",
+                    }
+                    # i.e. convert 'F' to 'FR'
+                    day_formatted = day_of_week_dict[day]
+                    date = weekDates[course_session.day_to_int()]
+                    #T seperates date from time for fullcalendar's format
+                    start = date + 'T' + course_session.start_time.strftime("%H:%M:%S")
+                    end = date + 'T' + course_session.end_time.strftime("%H:%M:%S")
+                    start_dict["dateTime"] = start
+                    end_dict["dateTime"] = end
+                    recur_dict["start"] = start_dict
+                    recur_dict["end"] = end_dict
+
+                    # get current term
+                    current_term = Term.get_current_term()
+
+                    term_end_date = current_term.end_date
+
+                    year = term_end_date.year
+                    if year < 10:
+                        year = "0" + str(year)
+
+                    month = term_end_date.month
+                    if month < 10:
+                        month = "0" + str(month)
+
+                    day = term_end_date.day
+                    if day < 10:
+                        day = "0" + str(day)
+
+                    # 'recurrence': ['RRULE:FREQ=WEEKLY;UNTIL=20150529T130000Z;BYDAY=FR']
+                    recur_list = []
+                    rule_string = 'RRULE:FREQ=WEEKLY;UNTIL=' + str(year) + str(month) + str(day) + ";BYDAY=" + str(day_formatted)
+                    recur_list.append(rule_string)
+
+                    recur_dict["recurrence"] = recur_list
+
+                    # start posting
+                    http = httplib2.Http()
+                    http = credential.authorize(http)
+                    service = build("calendar", "v3", http=http)
+                    
+                    recurring_event = service.events().insert(calendarId='primary', body=recur_dict).execute()
+
+                    calendar_post_success = True
 
     #save the minimum time a class starts and the maximum time while grabbing course sessions
     min_time_str = "08:00:00"
@@ -355,7 +398,9 @@ def schedule(request):
     return render(request, "my_schedule.html", {
             'sessions' : sessions,
             'min_time' : min_time_str,
-            'max_time' : max_time_str
+            'max_time' : max_time_str,
+            'calendar_post_success' : calendar_post_success,
+            'made_post' : made_post,
         })
 
 def googleLogin(request):

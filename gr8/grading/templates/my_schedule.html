@@ -11,6 +11,19 @@
 <div id='calendar'></div>
 <br>
 
+{% if made_post %}
+    {% if calendar_post_success %}
+        <h2>Successfully posted schedule to Google Calendar!</h2>
+    {% else %}
+        <h2>Post schedule to Google Calendar failed.</h2>
+    {% endif %}
+{% endif %}
+
+<form action="{% url 'grading:my-schedule' %}" method="POST">
+    {% csrf_token %}
+    <input class="btn btn-primary" type="submit" name="post_events" value="Post Schedule to Google Calendar">
+</form>
+
 {% endblock content %}
 
 {% block extrascripts %}
