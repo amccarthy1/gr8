@@ -4,6 +4,7 @@ from .forms import *
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 
 @login_required
 def course_grade(request, course_id=0, profile_id=0):
@@ -59,6 +60,11 @@ def user_registration(request):
 
         if user_form.is_valid():
             django_user = user_form.save()
+
+            if "is_staff" in request.POST:
+                django_user.is_staff = True
+                django_user.save()
+
             profile = profile_form.save(commit=False)
             profile.user = django_user
             profile.save()
@@ -146,6 +152,7 @@ def term_creation(request):
 
         else:
             return render(request, "term_creation.html", {"term_form": term_form, "failure": True, "terms":termList})
+
 
     term_form = TermForm()
     context = {"term_form" : term_form, "terms":termList}

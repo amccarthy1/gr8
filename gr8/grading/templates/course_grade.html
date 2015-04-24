@@ -32,10 +32,11 @@
                 {{ item.0.student.user.username}}
             </div>
             <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12 entry">
-                {{item.1.grade}}
+                {{item.1.grade}} {{item.1.grade.errors}}
             </div>
         </div>
         {% endfor %}
+        <br/>
         <input class='btn btn-md btn-primary pull-right' type="submit" value="Save Grades"  />
     </form>
 

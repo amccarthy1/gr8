@@ -5,6 +5,8 @@ from oauth2client.django_orm import FlowField
 from oauth2client.django_orm import CredentialsField
 import pickle
 import base64
+from  django.core.validators import MinValueValidator,MaxValueValidator
+from django.core.exceptions import ValidationError
 
 class CredentialsModel(models.Model):
     id = models.ForeignKey(User, primary_key=True)
@@ -79,6 +81,7 @@ class Affiliation(models.Model):
 class Course_Code(models.Model):
     name = models.CharField('name', max_length=80)
     code = models.CharField('code', max_length=10, unique=True, )
+    credits = models.IntegerField('credits', validators=[MinValueValidator(0)])
 
     def __str__(self):
         return self.code
@@ -122,14 +125,13 @@ class Term(models.Model):
         except:
             return None
 
-
 class Course(models.Model):
     course_code = models.ForeignKey(Course_Code)
     professor = models.ForeignKey(Profile, null=True, blank=True)
     term = models.ForeignKey(Term)
     section = models.IntegerField('section', null=False)
-    capacity = models.IntegerField('capacity', null=False, default=40)
-    credits = models.IntegerField('credits')
+    capacity = models.IntegerField('capacity', null=False, default=40, validators=[MinValueValidator(0)])
+
 
     def __str__(self):
         return self.name()
@@ -216,7 +218,7 @@ class Course(models.Model):
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Profile)
-    grade = models.FloatField('grade', blank=True, null=True)
+    grade = models.FloatField('grade', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     is_enrolled = models.BooleanField("enrolled?", default=False)
 
     def __str__(self):
@@ -291,3 +293,4 @@ class Course_Session(models.Model):
             if day.lower() == tup[1].lower():
                 return tup[0]
         return None # and play the price is right losing horn.
+

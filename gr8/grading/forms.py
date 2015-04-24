@@ -68,7 +68,7 @@ class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        exclude = ["course_code"]
+        exclude = ["course_code", "section"]
 
 class CourseCodeForm(forms.ModelForm):
 
@@ -78,7 +78,7 @@ class CourseCodeForm(forms.ModelForm):
 
     class Meta:
         model = Course_Code
-        fields = ["code", "name"]
+        fields = ["code", "name", "credits"]
 
 class TermForm(forms.ModelForm):
 
@@ -89,3 +89,10 @@ class TermForm(forms.ModelForm):
     class Meta:
         model = Term;
         exclude = ["year"]
+
+    def clean_end_date(self):
+        if self.cleaned_data["start_date"] > self.cleaned_data["end_date"]:
+            raise ValidationError("End date cannot be less than the start date")
+        if (self.cleaned_data["end_date"] - self.cleaned_data["start_date"]).days > 365:
+            raise ValidationError("Terms should not be longer than a year")
+        return self.cleaned_data["end_date"]
