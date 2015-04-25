@@ -68,6 +68,24 @@ class Profile(models.Model):
         enrolled_ins = self.enrolled_in_set.filter(is_enrolled=True)
         return enrolled_ins
 
+    def get_enrolled_by_term(self, term):
+        """
+        Returns all courses the student was enrolled in during the given term.
+        """
+        enrolled_ins = self.get_enrolled_ins().filter(course__term=term)
+        return enrolled_ins
+
+    def get_terms_attended(self):
+        """
+        Returns all the terms this student has been enrolled during.
+        """
+        #get enrolled_ins
+        enrolled_ins = self.get_enrolled_ins()
+        #get the courses from that set
+        courses = Course.objects.filter(id__in=enrolled_ins.values('course_id'))
+        #return the terms those courses are in
+        return Term.objects.filter(id__in=courses.values('term_id'))
+
 
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)

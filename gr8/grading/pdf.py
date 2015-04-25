@@ -138,18 +138,43 @@ class SemesterReport(Flowable):
     semester.
     """
 
-    def __init__(self, term, enrolled_ins):
+    def __init__(self, user, term):
         Flowable.__init__(self)
         self.width = CONTENT_WIDTH
-        self.height = 0#TODO
+        self.term_name_size = 18;#pts
+
+        #get the semester information
+        self.term_name = str(term)
+        enrolled_ins = user.profile.get_enrolled_by_term(term)
+
+        #initialize the courses table to be drawn
+        self.courses_table = CoursesTable(enrolled_ins)
+
+        #calculate the height of this component
+        self.height = self.term_name_size + self.courses_table.height
 
     def __repr__(self):
         return "SemesterReport(w=%d,h=%d)" % (self.width, self.height)
 
     def draw(self):
-        pass
-        #draw the actual stuff.
+        #initialize coordinates
+        x = 0
+        y = self.height
 
+        #start drawing in black
+        self.canv.setFillColorRGB(0,0,0)
+        #write the semester title
+        textobject = self.canv.beginText()
+        y -= self.term_name_size
+        textobject.setTextOrigin(x,y)
+        textobject.setFont("PTSans-Regular", self.term_name_size)
+        textobject.textLine(self.term_name)
+        self.canv.drawText(textobject)
+
+        #draw the table
+        y -= self.courses_table.height
+        self.courses_table.wrapOn(self.canv, x,y)
+        self.courses_table.drawOn(self.canv, x,y)
 
 @login_required
 def render_transcript(request):
@@ -168,12 +193,13 @@ def render_transcript(request):
     doc = SimpleDocTemplate(response, pagesize=A4,
         leftMargin=MARGIN, rightMargin=MARGIN,
         topMargin=MARGIN, bottomMargin=MARGIN)
-    spacer = Spacer(0,0,0.25 * INCH)
+    spacer = Spacer(0,0.25 * INCH)
 
     #add components
     story.append(Header(request.user))
-    story.append(spacer)
-    story.append(CoursesTable(request.user.profile.get_current_enrolled()))#TODO: Fix this
+    for term in request.user.profile.get_terms_attended():
+        story.append(spacer)
+        story.append(SemesterReport(request.user, term))
 
     doc.build(story)
 
