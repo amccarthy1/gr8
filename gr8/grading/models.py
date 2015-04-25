@@ -86,6 +86,29 @@ class Profile(models.Model):
         #return the terms those courses are in
         return Term.objects.filter(id__in=courses.values('term_id'))
 
+    def get_term_stats(self, term):
+        """
+        Return a dictionary of various stats where all key/value pairs are
+        strings so that they are print-friendly.
+        """
+        stats = list()
+        attempted = 0
+        earned = 0
+        gpa_credits = 0
+        for enrolled_in in self.get_enrolled_by_term(term):
+            attempted += enrolled_in.course.credits#TODO this will change when credits are moved to course code
+            if enrolled_in.grade:
+                #TODO: We should probably not ASSume the grade is out of 4...
+                gpa_credits += (enrolled_in.grade/4)*enrolled_in.course.credits
+                #TODO: check if the grade is passing so we know if they earned the credits.
+                earned += (enrolled_in.grade/4)*enrolled_in.course.credits#FIX THIS
+        gpa = gpa_credits / attempted
+        #add stats to dictionary
+        stats.append(('Credits Attempted:', str(attempted)))
+        stats.append(('Credits Earned:', str(earned)))
+        stats.append(('GPA:', str(gpa)))#TODO put the gpa scale in
+        return stats
+
 
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)

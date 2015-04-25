@@ -132,6 +132,37 @@ class CoursesTable(Flowable):
         table.wrapOn(self.canv, 0, 0)
         table.drawOn(self.canv, 0, 0)
 
+class StatsTable(Flowable):
+    """
+    Display Statistics from a dictionary in a table.
+    """
+
+    def __init__(self, stats):
+        Flowable.__init__(self)
+        self.width = CONTENT_WIDTH
+        self.stats = stats
+        self.text_size = 12
+        self.top_padding = 3
+        self.bottom_padding = 3
+        self.height = len(stats) * (self.text_size + self.top_padding + self.bottom_padding)
+
+    def __repr__(self):
+        return "StatTable(w=%d,h=%d)" % (self.width, self.height)
+
+    def draw(self):
+        #build the table
+        table = Table(self.stats)
+        table.setStyle(TableStyle([
+            ('FONT', (0,0), (0,-1), 'PTSans-Bold'),
+            ('SIZE',(0,0),(-1,-1),self.text_size),
+            ('BOTTOMPADDING', (0,0),(-1,-1),self.bottom_padding),
+            ('TOPPADDING', (0,0), (-1,-1), self.top_padding),
+            ]))
+        table.hAlign = 'RIGHT'
+        table.wrapOn(self.canv,0,0)
+        table.drawOn(self.canv,0,0)
+
+
 class SemesterReport(Flowable):
     """
     Display Semester information, followed by course information for that
@@ -149,9 +180,10 @@ class SemesterReport(Flowable):
 
         #initialize the courses table to be drawn
         self.courses_table = CoursesTable(enrolled_ins)
+        self.stats_table = StatsTable(user.profile.get_term_stats(term))
 
         #calculate the height of this component
-        self.height = self.term_name_size + self.courses_table.height
+        self.height = self.term_name_size + self.courses_table.height + self.stats_table.height
 
     def __repr__(self):
         return "SemesterReport(w=%d,h=%d)" % (self.width, self.height)
@@ -175,6 +207,11 @@ class SemesterReport(Flowable):
         y -= self.courses_table.height
         self.courses_table.wrapOn(self.canv, x,y)
         self.courses_table.drawOn(self.canv, x,y)
+
+        #draw the stats table
+        y -= self.stats_table.height
+        self.stats_table.wrapOn(self.canv,x,y)
+        self.stats_table.drawOn(self.canv,x,y)
 
 @login_required
 def render_transcript(request):
