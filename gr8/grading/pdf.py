@@ -132,6 +132,24 @@ class CoursesTable(Flowable):
         table.wrapOn(self.canv, 0, 0)
         table.drawOn(self.canv, 0, 0)
 
+class SemesterReport(Flowable):
+    """
+    Display Semester information, followed by course information for that
+    semester.
+    """
+
+    def __init__(self, term, enrolled_ins):
+        Flowable.__init__(self)
+        self.width = CONTENT_WIDTH
+        self.height = 0#TODO
+
+    def __repr__(self):
+        return "SemesterReport(w=%d,h=%d)" % (self.width, self.height)
+
+    def draw(self):
+        pass
+        #draw the actual stuff.
+
 
 @login_required
 def render_transcript(request):
