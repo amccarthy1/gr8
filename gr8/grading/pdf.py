@@ -88,20 +88,23 @@ class CoursesTable(Flowable):
         self.bottom_padding = 3
         self.top_header_padding = 3
         self.bottom_header_padding = 10
+        self.border_width = 0.25
         #Calculate the height of the entire table 
         row_height = self.text_size + self.top_padding + self.bottom_padding
         self.height = row_height * len(enrolled_ins)
         self.height += self.header_size + self.top_header_padding + self.bottom_header_padding
+        self.height += len(enrolled_ins) * self.border_width + 2#account for all borders (+2 = bottom and top)
 
     def __repr__(self):
         return "CourseTable(w=%d,h=%d)" % (self.width, self.height)
 
     def draw(self):
         #define the data grid
-        data = [['Course Code', 'Credits', 'Grade']]
+        data = [['Course Name', 'Code', 'Credits', 'Grade']]
         #add each course to the data
         for enrolled_in in self.enrolled_ins:
             row = []
+            row.append(str(enrolled_in.course))
             row.append(str(enrolled_in.course.course_code))
             row.append(str(enrolled_in.course.credits))#TODO: this will change when credits are moved.
             if enrolled_in.grade:
@@ -109,8 +112,11 @@ class CoursesTable(Flowable):
             else:
                 row.append(str("NC"))#Not Complete (no grade was entered)
             data.append(row)
+
         #build the table
-        table = Table(data)
+        #colWidths is an array of sizes for each column
+        colWidths = [self.width/2] + [self.width/6] * 3
+        table = Table(data,colWidths)
         #style the header differently
         table.setStyle(TableStyle([
             ('SIZE',(0,0),(-1,0),self.header_size),
@@ -118,8 +124,10 @@ class CoursesTable(Flowable):
             ('TOPPADDING', (0,0),(-1,0), self.top_header_padding),
             ('BACKGROUND',(0,0),(-1,0), colors.Color(.5,.5,.5,1)),
             ('TEXTCOLOR', (0,0),(-1,0), colors.white),
-            ('BOTTOMPADDING', (0,1),(-1,0),self.bottom_padding),
-            ('TOPPADDING', (0,1), (-1,0), self.top_padding),
+            ('BOTTOMPADDING', (0,1),(-1,-1),self.bottom_padding),
+            ('TOPPADDING', (0,1), (-1,-1), self.top_padding),
+            ('INNERGRID', (0,0), (-1,-1), self.border_width, colors.black),
+            ('BOX', (0,0), (-1,-1), self.border_width, colors.black)
             ]))
         table.wrapOn(self.canv, 0, 0)
         table.drawOn(self.canv, 0, 0)
