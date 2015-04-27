@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Flowable, SimpleDocTemplate, Spacer, Table, TableStyle
 import reportlab.lib.colors as colors
 import os
+from gr8.settings import GRADE_SCALE, GRADE_PASSING
 
 INCH = 72 # 1" = 72pt
 MARGIN = INCH * 3 / 4 # 3/4" margins

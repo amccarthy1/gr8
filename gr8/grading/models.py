@@ -5,6 +5,7 @@ from oauth2client.django_orm import FlowField
 from oauth2client.django_orm import CredentialsField
 import pickle
 import base64
+from gr8.settings import GRADE_SCALE, GRADE_PASSING
 
 class CredentialsModel(models.Model):
     id = models.ForeignKey(User, primary_key=True)
@@ -94,19 +95,29 @@ class Profile(models.Model):
         stats = list()
         attempted = 0
         earned = 0
-        gpa_credits = 0
+        grade_points = 0
+        num_grades = 0
         for enrolled_in in self.get_enrolled_by_term(term):
             attempted += enrolled_in.course.credits#TODO this will change when credits are moved to course code
-            if enrolled_in.grade:
-                #TODO: We should probably not ASSume the grade is out of 4...
-                gpa_credits += (enrolled_in.grade/4)*enrolled_in.course.credits
-                #TODO: check if the grade is passing so we know if they earned the credits.
-                earned += (enrolled_in.grade/4)*enrolled_in.course.credits#FIX THIS
-        gpa = gpa_credits / attempted
+            if enrolled_in.grade is not None:
+                num_grades += 1#only count finished courses
+                grade_points += enrolled_in.grade * enrolled_in.course.credits
+                #if the student passed, give them their earned credits
+                if enrolled_in.grade >= GRADE_PASSING:
+                    earned += enrolled_in.course.credits
+
+        #calculate the gpa
+        print("Grade Points: " + str(grade_points))
+        print("Num Grades: " + str(num_grades))
+        if num_grades == 0:
+            gpa = 0
+        else:
+            gpa = grade_points / attempted
+
         #add stats to dictionary
         stats.append(('Credits Attempted:', str(attempted)))
         stats.append(('Credits Earned:', str(earned)))
-        stats.append(('GPA:', str(gpa)))#TODO put the gpa scale in
+        stats.append(('GPA:', "%d/%d" % (gpa, GRADE_SCALE)))
         return stats
 
 
@@ -140,11 +151,13 @@ class Term(models.Model):
         (WINTER, 'Winter'),
         (SUMMER, 'Summer'),
     )
-    # TODO add comparator
     season = models.CharField('season', max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField('year')
     start_date = models.DateTimeField('start date', default=timezone.now)
     end_date = models.DateTimeField('end date', default=timezone.now)
+
+    def __lt__(self, term):
+        return (self.start_date < term.start_date)
 
     def __str__(self):
         #human-ify the season

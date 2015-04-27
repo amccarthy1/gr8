@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 from django.conf import global_settings
 
+#gr8 settings
+GRADE_SCALE = 4
+GRADE_PASSING = 2
+
+#other settings
+
 FONT_DIR = "fonts/"
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
