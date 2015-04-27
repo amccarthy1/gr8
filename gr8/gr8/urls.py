@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from grading.views import login, logout, auth_return, googleLogin
+from grading.views import login, logout, auth_return, googleLogin, auth_schedule
 from grading.adminViews import *
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
@@ -18,5 +18,6 @@ urlpatterns = patterns('',
     url(r'^login$', login, name="login"),
     url(r'^logout$', logout, name="logout"),
     url(r'^oauth2callback', auth_return, name="auth_return"),
+    url(r'^auth-schedule', auth_schedule, name="auth-schedule"),
     url(r'^googleLogin/$', googleLogin, name="google_login"),
 )

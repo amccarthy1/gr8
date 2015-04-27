@@ -27,6 +27,11 @@ FLOW = flow_from_clientsecrets(
     scope='https://www.googleapis.com/auth/calendar',
     redirect_uri=settings.OAUTH_CALLBACK_URL)
 
+FLOW2 = flow_from_clientsecrets(
+    CLIENT_SECRETS,
+    scope='https://www.googleapis.com/auth/calendar',
+    redirect_uri="http://localhost:8000/auth-schedule")
+
 def view_home(request):
     return render(request, "index.html")
 
@@ -283,9 +288,9 @@ def schedule(request):
         credential = storage.get()
         # if the user is not authenticated with google, authenticate
         if credential is None or credential.invalid == True:
-            FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
+            FLOW2.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
                                                        request.user)
-            authorize_url = FLOW.step1_get_authorize_url()
+            authorize_url = FLOW2.step1_get_authorize_url()
             return HttpResponseRedirect(authorize_url)
 
         else:
@@ -432,6 +437,16 @@ def auth_return(request):
     storage = Storage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
     return HttpResponseRedirect("/")
+
+@login_required
+def auth_schedule(request):
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.REQUEST['state'], 
+        request.user):
+        return  HttpResponseBadRequest()
+    credential = FLOW2.step2_exchange(request.REQUEST)
+    storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+    storage.put(credential)
+    return HttpResponseRedirect("/my-schedule")
 
 @login_required
 def my_grades(request):
