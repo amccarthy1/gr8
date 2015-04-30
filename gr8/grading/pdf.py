@@ -107,9 +107,9 @@ class CoursesTable(Flowable):
             row = []
             row.append(str(enrolled_in.course))
             row.append(str(enrolled_in.course.course_code))
-            row.append(str(enrolled_in.course.credits))#TODO: this will change when credits are moved.
+            row.append(str(enrolled_in.course.course_code.credits))
             if enrolled_in.grade:
-                row.append(str(enrolled_in.grade))
+                row.append("%.2f" % enrolled_in.grade )
             else:
                 row.append(str("NC"))#Not Complete (no grade was entered)
             data.append(row)

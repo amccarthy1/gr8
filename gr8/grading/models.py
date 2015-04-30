@@ -90,6 +90,14 @@ class Profile(models.Model):
         #return the terms those courses are in
         return Term.objects.filter(id__in=courses.values('term_id'))
 
+    def get_terms_up_to(self, term):
+        """
+        Return a collection of terms this student has been enrolled in up to
+        and including the given term.
+        """
+        return self.get_terms_attended().filter(start_date__lte=term.start_date)
+
+
     def get_term_stats(self, term):
         """
         Return a dictionary of various stats where all key/value pairs are
@@ -98,29 +106,28 @@ class Profile(models.Model):
         stats = list()
         attempted = 0
         earned = 0
-        grade_points = 0
+        grade_points = 0.0
         num_grades = 0
-        for enrolled_in in self.get_enrolled_by_term(term):
-            attempted += enrolled_in.course.credits#TODO this will change when credits are moved to course code
-            if enrolled_in.grade is not None:
-                num_grades += 1#only count finished courses
-                grade_points += enrolled_in.grade * enrolled_in.course.credits
-                #if the student passed, give them their earned credits
-                if enrolled_in.grade >= GRADE_PASSING:
-                    earned += enrolled_in.course.credits
+        for term in self.get_terms_up_to(term):
+            for enrolled_in in self.get_enrolled_by_term(term):
+                attempted += enrolled_in.course.course_code.credits
+                if enrolled_in.grade is not None:
+                    num_grades += 1#only count finished courses
+                    grade_points += enrolled_in.grade * enrolled_in.course.course_code.credits
+                    #if the student passed, give them their earned credits
+                    if enrolled_in.is_passing_grade():
+                        earned += enrolled_in.course.course_code.credits
 
         #calculate the gpa
-        print("Grade Points: " + str(grade_points))
-        print("Num Grades: " + str(num_grades))
         if num_grades == 0:
             gpa = 0
         else:
-            gpa = grade_points / attempted
+            gpa = float(grade_points) / attempted
 
         #add stats to dictionary
         stats.append(('Credits Attempted:', str(attempted)))
         stats.append(('Credits Earned:', str(earned)))
-        stats.append(('GPA:', "%d/%d" % (gpa, GRADE_SCALE)))
+        stats.append(('GPA:', "%.2f/%.2f" % (gpa, GRADE_SCALE)))
         return stats
 
     def passed_class(self, code):
@@ -303,7 +310,7 @@ class Enrolled_In(models.Model):
     def is_passing_grade(self):
         # If we want grading to be more modular or we need to change the
         # passing threshold, it should be done here
-        return self.grade > 2
+        return self.grade > GRADE_PASSING
 
 class Prereq(models.Model):
     prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')
