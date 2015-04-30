@@ -1,12 +1,14 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
-from oauth2client.django_orm import FlowField
-from oauth2client.django_orm import CredentialsField
-import pickle
-import base64
 from  django.core.validators import MinValueValidator,MaxValueValidator
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
+from gr8.settings import GRADE_SCALE, GRADE_PASSING
+from oauth2client.django_orm import CredentialsField
+from oauth2client.django_orm import FlowField
+import base64
+import pickle
+
 
 class CredentialsModel(models.Model):
     id = models.ForeignKey(User, primary_key=True)
@@ -70,6 +72,57 @@ class Profile(models.Model):
         enrolled_ins = self.enrolled_in_set.filter(is_enrolled=True)
         return enrolled_ins
 
+    def get_enrolled_by_term(self, term):
+        """
+        Returns all courses the student was enrolled in during the given term.
+        """
+        enrolled_ins = self.get_enrolled_ins().filter(course__term=term)
+        return enrolled_ins
+
+    def get_terms_attended(self):
+        """
+        Returns all the terms this student has been enrolled during.
+        """
+        #get enrolled_ins
+        enrolled_ins = self.get_enrolled_ins()
+        #get the courses from that set
+        courses = Course.objects.filter(id__in=enrolled_ins.values('course_id'))
+        #return the terms those courses are in
+        return Term.objects.filter(id__in=courses.values('term_id'))
+
+    def get_term_stats(self, term):
+        """
+        Return a dictionary of various stats where all key/value pairs are
+        strings so that they are print-friendly.
+        """
+        stats = list()
+        attempted = 0
+        earned = 0
+        grade_points = 0
+        num_grades = 0
+        for enrolled_in in self.get_enrolled_by_term(term):
+            attempted += enrolled_in.course.credits#TODO this will change when credits are moved to course code
+            if enrolled_in.grade is not None:
+                num_grades += 1#only count finished courses
+                grade_points += enrolled_in.grade * enrolled_in.course.credits
+                #if the student passed, give them their earned credits
+                if enrolled_in.grade >= GRADE_PASSING:
+                    earned += enrolled_in.course.credits
+
+        #calculate the gpa
+        print("Grade Points: " + str(grade_points))
+        print("Num Grades: " + str(num_grades))
+        if num_grades == 0:
+            gpa = 0
+        else:
+            gpa = grade_points / attempted
+
+        #add stats to dictionary
+        stats.append(('Credits Attempted:', str(attempted)))
+        stats.append(('Credits Earned:', str(earned)))
+        stats.append(('GPA:', "%d/%d" % (gpa, GRADE_SCALE)))
+        return stats
+
 
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)
@@ -102,11 +155,13 @@ class Term(models.Model):
         (WINTER, 'Winter'),
         (SUMMER, 'Summer'),
     )
-    # TODO add comparator
     season = models.CharField('season', max_length=10, choices=TERM_CHOICES)
     year = models.IntegerField('year')
     start_date = models.DateTimeField('start date', default=timezone.now)
     end_date = models.DateTimeField('end date', default=timezone.now)
+
+    def __lt__(self, term):
+        return (self.start_date < term.start_date)
 
     def __str__(self):
         #human-ify the season

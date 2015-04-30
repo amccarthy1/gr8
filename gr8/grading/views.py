@@ -1,20 +1,20 @@
+from apiclient.discovery import build
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.utils import timezone
-from grading.models import *
-import datetime
 from django.utils import timezone
 from gr8 import settings
-import os
-import logging
-import httplib2
-from apiclient.discovery import build
+from grading.models import *
 from oauth2client import xsrfutil
 from oauth2client.client import flow_from_clientsecrets, AccessTokenRefreshError
 from oauth2client.django_orm import Storage
+import datetime
+import httplib2
+import logging
+import os
 
 # CLIENT_SECRETS, name of a file containing the OAuth 2.0 information for this
 # application, including client_id and client_secret, which are found
