@@ -123,6 +123,24 @@ class Profile(models.Model):
         stats.append(('GPA:', "%d/%d" % (gpa, GRADE_SCALE)))
         return stats
 
+    def passed_class(self, code):
+        try:
+            ei = Enrolled_In.objects.get(student=self, course__course_code=code);
+            return ei.is_passing_grade()
+        except:
+            return False
+
+    def meets_prerequisites(self, code):
+        if isinstance(code, Course): # allow passing in a course or code
+            code = code.course_code
+
+        prereqs = code.prereq_set.all()
+        for prereq in prereqs:
+            required = prereq.course
+            if not self.passed_class(required):
+                return False
+
+        return True
 
 class Affiliation(models.Model):
     profile = models.ForeignKey(Profile)
@@ -281,6 +299,11 @@ class Enrolled_In(models.Model):
 
     class Meta:
         verbose_name = "enrolled in"
+
+    def is_passing_grade(self):
+        # If we want grading to be more modular or we need to change the
+        # passing threshold, it should be done here
+        return self.grade > 2
 
 class Prereq(models.Model):
     prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')

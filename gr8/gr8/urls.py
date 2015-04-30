@@ -15,8 +15,8 @@ urlpatterns = patterns('',
 
     url(r'^', include(grading_urls, namespace="grading")),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login$', login, name="login"),
-    url(r'^logout$', logout, name="logout"),
-    url(r'^oauth2callback', auth_return, name="auth_return"),
+    url(r'^login/$', login, name="login"),
+    url(r'^logout/$', logout, name="logout"),
+    url(r'^oauth2callback/', auth_return, name="auth_return"),
     url(r'^googleLogin/$', googleLogin, name="google_login"),
 )
