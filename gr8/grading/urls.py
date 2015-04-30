@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^course/(?P<course_id>\d+)/$', course_info, name="info"), #Single course info page
     url(r'^course/my-courses/$', courses_mine, name="courses_mine"),
     url(r'^course/cart/$', shopping_bag, name="cart"),
-    url(r'^pdf/$', render_transcript, name="pdf"), #TODO Move this URL to somewhere more useful.
+    url(r'^transcript/$', render_transcript, name="transcript"), #TODO Move this URL to somewhere more useful.
     url(r'^my-schedule/$', schedule, name="my-schedule"),
 
     #admin urls
