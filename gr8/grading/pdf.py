@@ -226,7 +226,6 @@ def render_transcript(request):
 
     #initialize the stuff.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=' + filename
     story = []
     doc = SimpleDocTemplate(response, pagesize=A4,
         leftMargin=MARGIN, rightMargin=MARGIN,

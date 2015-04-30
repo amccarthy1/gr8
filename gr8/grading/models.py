@@ -107,22 +107,23 @@ class Profile(models.Model):
         attempted = 0
         earned = 0
         grade_points = 0.0
+        grade_credits = 0
         num_grades = 0
         for term in self.get_terms_up_to(term):
             for enrolled_in in self.get_enrolled_by_term(term):
                 attempted += enrolled_in.course.course_code.credits
                 if enrolled_in.grade is not None:
-                    num_grades += 1#only count finished courses
                     grade_points += enrolled_in.grade * enrolled_in.course.course_code.credits
+                    grade_credits += enrolled_in.course.course_code.credits
                     #if the student passed, give them their earned credits
                     if enrolled_in.is_passing_grade():
                         earned += enrolled_in.course.course_code.credits
 
         #calculate the gpa
-        if num_grades == 0:
+        if grade_credits == 0:
             gpa = 0
         else:
-            gpa = float(grade_points) / attempted
+            gpa = float(grade_points) / grade_credits
 
         #add stats to dictionary
         stats.append(('Credits Attempted:', str(attempted)))
