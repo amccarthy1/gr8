@@ -2,9 +2,7 @@ from django.contrib import admin
 from grading.models import *
 
 # Register your models here.
-admin.site.register(Department)
 admin.site.register(Profile)
-admin.site.register(Affiliation)
 admin.site.register(Course_Code)
 admin.site.register(Term)
 admin.site.register(Course)

@@ -17,12 +17,6 @@ class CredentialsModel(models.Model):
     def __str__(self):
         return "Credentials for " + str(self.id)
 
-class Department(models.Model):
-    name = models.CharField('name', max_length=40, unique=True)
-
-    def __str__(self):
-        return self.name
-
 class Profile(models.Model):
     user = models.OneToOneField(User)
     can_enroll = models.BooleanField("can enroll?", default=False)
@@ -149,13 +143,6 @@ class Profile(models.Model):
                 return False
 
         return True
-
-class Affiliation(models.Model):
-    profile = models.ForeignKey(Profile)
-    department = models.ForeignKey(Department)
-
-    def __str__(self):
-        return "%s is a part of the %r department" % (self.profile.user.username, self.department.name)
 
 class Course_Code(models.Model):
     name = models.CharField('name', max_length=80)
