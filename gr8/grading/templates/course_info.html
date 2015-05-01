@@ -3,9 +3,13 @@
 Course Info {{ course.desc_string }}
 {% endblock title %}
 {% block content %}
-{% if enroll_success %}{% else %}
-<div class="error">
-Error: Course full, could not enroll.
+{% if success %}
+<div class="alert alert-success">
+    You have successfully enrolled in the course
+</div>
+{% elif error_message %}
+<div class="alert alert-danger">
+    {{ error_message }}
 </div>
 {% endif %}
 <table id="class-info-table" class="table table-striped">

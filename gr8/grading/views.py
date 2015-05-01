@@ -86,7 +86,8 @@ def course_info(request, course_id=0):
 
     is_enrolled = False
     is_in_cart = False
-    success = True
+    message = ""
+    success = False
     if profile:
         #is_enrolled is true if there is a Enrolled_In w/ this student & course
         is_enrolled = len(Enrolled_In.objects.filter(course=c ,student=profile, is_enrolled=True)) > 0
@@ -94,8 +95,9 @@ def course_info(request, course_id=0):
         #when user tries to enroll or add to bucket
         if can_enroll and request.method == "POST":
             if "enroll" in request.POST:
-                success = profile.enroll_in(c)
-                is_enrolled = success
+                message = profile.enroll_in(c) # error message
+                success = message == "" # To display a success message
+                is_enrolled = success # To show correct buttons
             elif not is_enrolled and not is_in_cart and "cart" in request.POST:
                 enrolled_in = Enrolled_In.objects.create(course=c, student=profile, is_enrolled=False)
                 is_in_cart = True
@@ -113,7 +115,8 @@ def course_info(request, course_id=0):
         'can_enroll' : can_enroll,
         'is_enrolled' : is_enrolled,
         'is_in_cart' : is_in_cart,
-        'enroll_success' : success,
+        'success': success,
+        'error_message': message,
         'is_professor' : is_professor,
     }
     return render(request, "course_info.html", context)

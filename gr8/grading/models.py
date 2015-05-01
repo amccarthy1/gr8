@@ -33,24 +33,29 @@ class Profile(models.Model):
         Parameters:
             course: The course the student wants to enroll in
         Returns:
-            True if the enrollment was successful.
-            False if the enrollment was not successful.
+            Empty string if the enrollment was successful
+            An error message if the enrollment was unsuccessful
         """
+        # Determine if the user meets the prerequisites for the course
+        if (not self.meets_prerequisites(course)):
+            return "You do not meet the prerequisites for that course"
+
         enrollment, created = Enrolled_In.objects.get_or_create(
             student=self,
             course=course
         )
         enrollment.is_enrolled = True
         enrollment.save()
+
         if (course.get_enrollment() <= course.capacity):
-            return True
+            return ""
         else:
             if created:
                 enrollment.delete()
             else:
                 enrollment.is_enrolled = False
                 enrollment.save()
-            return False
+            return "This course is full, enrollment unsuccessful"
 
     def get_current_enrolled(self):
         """
@@ -298,7 +303,7 @@ class Enrolled_In(models.Model):
     def is_passing_grade(self):
         # If we want grading to be more modular or we need to change the
         # passing threshold, it should be done here
-        return self.grade > GRADE_PASSING
+        return self.grade >= GRADE_PASSING
 
 class Prereq(models.Model):
     prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')
