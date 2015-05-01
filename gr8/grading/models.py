@@ -42,7 +42,7 @@ class Profile(models.Model):
         )
         enrollment.is_enrolled = True
         enrollment.save()
-        if (course.get_enrollment() < course.capacity):
+        if (course.get_enrollment() <= course.capacity):
             return True
         else:
             if created:
