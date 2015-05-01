@@ -291,7 +291,7 @@ class Course(models.Model):
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Profile)
-    grade = models.FloatField('grade', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    grade = models.FloatField('grade', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(GRADE_SCALE)])
     is_enrolled = models.BooleanField("enrolled?", default=False)
 
     def __str__(self):
