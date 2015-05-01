@@ -306,7 +306,7 @@ class Enrolled_In(models.Model):
         return self.grade >= GRADE_PASSING
 
 class Prereq(models.Model):
-    prereq_class = models.ForeignKey(Course_Code, related_name='prereq_set')
+    prereq_course = models.ForeignKey(Course_Code, related_name='prereq_set')
     course = models.ForeignKey(Course_Code, related_name='_')
 
     def __str__(self):
