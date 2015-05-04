@@ -36,26 +36,28 @@ class Profile(models.Model):
             Empty string if the enrollment was successful
             An error message if the enrollment was unsuccessful
         """
-        # Determine if the user meets the prerequisites for the course
-        if (not self.meets_prerequisites(course)):
-            return "You do not meet the prerequisites for that course"
+        if (self.can_enroll):
 
-        enrollment, created = Enrolled_In.objects.get_or_create(
-            student=self,
-            course=course
-        )
-        enrollment.is_enrolled = True
-        enrollment.save()
+             # Determine if the user meets the prerequisites for the course
+            if (not self.meets_prerequisites(course)):
+                return "You do not meet the prerequisites for that course"
 
-        if (course.get_enrollment() <= course.capacity):
-            return ""
-        else:
-            if created:
-                enrollment.delete()
+            enrollment, created = Enrolled_In.objects.get_or_create(
+                student=self,
+                course=course
+            )
+            enrollment.is_enrolled = True
+            enrollment.save()
+
+            if (course.get_enrollment() <= course.capacity):
+                return ""
             else:
-                enrollment.is_enrolled = False
-                enrollment.save()
-            return "This course is full, enrollment unsuccessful"
+                if created:
+                    enrollment.delete()
+                else:
+                    enrollment.is_enrolled = False
+                    enrollment.save()
+                return "This course is full, enrollment unsuccessful"
 
     def get_current_enrolled(self):
         """
