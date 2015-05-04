@@ -32,21 +32,27 @@ function reset_errors() {
 // Sets the status <h2> on the page and sets it to text-danger
 // param message not required, defaults to a generic error
 function set_error(message) {
-    $("#status").hide();
+    $("#status-flash").hide();
     if (message) {
-        $("#status").html(message);
+        $("#status-flash").html(message);
     } else {
-        $("#status").html("Course was not created due to an error");
+        $("#status-flash").html("Course was not created due to an error");
     }
-    $("#status").addClass("text-danger");
-    $("#status").show();
+    $("#status-flash").addClass("alert-danger");
+    $("#status-flash").show();
     console.log(message);
 }
 
 // Sets the status <h2> on the page and makes it not text-danger
 // param message required.
 function set_status(message) {
-    $("#status").hide().html(message).removeClass("text-danger").show();
+    $("#status-flash").hide();
+    if (message) {
+        $("#status-flash").html(message);
+        $("#status-flash").removeClass("alert-danger");
+        $("#status-flash").addClass("alert-success");
+        $("#status-flash").show();
+    }
 }
 
 
@@ -95,6 +101,8 @@ function submit_course_form(callback) {
     if (validation_failed) {
         // reset validation flag, return.
         validation_failed = false;
+        // u dun gooft
+        set_error("There were errors in the form. Please fix the highlighted fields and submit again");
         return;
     }
     $.ajax({

@@ -11,6 +11,8 @@ from django.core.exceptions import ValidationError
 def course_grade(request, course_id=0, profile_id=0):
 
     profile = request.user.profile
+    submitted=False
+    error=False
 
     if profile is None:
         raise Http404()
@@ -35,6 +37,10 @@ def course_grade(request, course_id=0, profile_id=0):
                 enrolled_in = forms[i].save(commit=False)
                 enrolled_ins[i].grade = enrolled_in.grade
                 enrolled_ins[i].save()
+            else:
+                error=True
+
+        submitted=True
 
     else:
         forms = [GradeForm(prefix=str(x), instance=enrolled_ins[x]) for x in range(0,len(enrolled_ins))]
@@ -47,6 +53,8 @@ def course_grade(request, course_id=0, profile_id=0):
     context = {
         "grade_items": grade_items,
         "course" : c,
+        "submitted": submitted,
+        "error": error,
     }
     return render(request, "course_grade.html", context)
 

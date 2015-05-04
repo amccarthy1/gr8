@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 {% block content %} 
+{% if success %}
+<div class="alert alert-success">
+    User was successfully created.
+</div>
+{% endif %}
+{% if failure %}
+<div class="alert alert-danger">
+    There were errors. Please fix the highlighted fields and submit the form again.
+</div>
+{% endif %}
+
 <h1>Create a User</h1>
 <form action="{% url 'grading:register' %}" method="post">
     <table class="bootstrap-table">
@@ -39,14 +50,5 @@
     </table>
     <input class='btn btn-md btn-primary' type="submit" value="Register"  />
 </form>
-
-
-{% if success %}
-<h1>User Created!</h1>
-{% endif %}
-{% if failure %}
-<h1>Error, User Not Created.</h1>
-{% endif %}
-
 
 {% endblock content %}

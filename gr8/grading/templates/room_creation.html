@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{% if success %}
+<div class="alert alert-success">
+    Room Created
+</div>
+{% elif failure %}
+<div class="alert alert-danger">
+    There were errors with the form. Please fix the highlighted fields and submit it again
+</div>
+{% endif %}
+<h1>
+    Add a Room
+</h1>
 <div class="container">
     <form action="{% url 'grading:room_creation' %}" method="post">
     {% csrf_token %}
@@ -11,8 +22,10 @@
                 {% else %}
                 <div class="col-md-1">{{ field.label_tag }}</div>
                 <div class="col-right entry {% if field.errors.0 %}entry-error{% endif %}">
-                    <div class="col-md-4">{{ field }}</div>
-                    <div class="text-danger">{{ field.errors.0 }}</div>
+                    <div class="col-md-4">
+                        {{ field }}
+                        <div class="text-danger">{{ field.errors.0 }}</div>
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -22,16 +35,11 @@
         </div>
     </form>
 </div>
-
-{% if success %}
-<h1>Room Created</h1>
-{% elif failure %}
-<h1>Error Room Not Created.</h1>
-{% endif %}
-
-<h2>Rooms Currently In The System</h2>
+<hr />
+<table class="table table-hover">
+<thead><tr class="bg-primary"><th>Rooms Currently In The System</th></tr></thead>
 {% for room in rooms %}
-        <li>{{ room.name }}</li>
+        <tr><td>{{ room.name }}</td></tr>
 {% endfor %}
-
+</table>
 {% endblock content %}

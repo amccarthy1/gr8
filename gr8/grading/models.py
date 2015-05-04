@@ -192,6 +192,13 @@ class Term(models.Model):
                 season = choice[1]
         return "%s, %s" % (season, self.year)
 
+    # returns a readable form of the start date
+    def start(self):
+        return self.start_date.strftime("%B %d, %Y")
+
+    def end(self):
+        return self.end_date.strftime("%B %d, %Y")
+
     # returns the currently active term object.
     def get_current_term():
         now = timezone.now()

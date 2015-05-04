@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% if submitted%}
+    {% if error %}
+    <div class="alert alert-danger">
+        Some grades had errors and were not saved. Please fix these items
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        Grades saved successfully
+    </div>
+    {% endif %}
+{% endif %}
 <div class="container">
 
     <div class="row bg-primary">
@@ -31,7 +42,7 @@
             <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12">
                 {{ item.0.student.user.username}}
             </div>
-            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12 entry">
+            <div class="col-lg-3 col-md-3 col-xs-3 col-xs-12 entry{% if item.1.grade.errors %} entry-error{%endif%}">
                 {{item.1.grade}} {{item.1.grade.errors}}
             </div>
         </div>

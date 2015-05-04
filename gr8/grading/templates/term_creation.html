@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{% if success %}
+<div class="alert alert-success">
+    Term created successfully
+</div>
+{% elif failure %}
+<div class="alert alert-danger">
+    There were errors with the form. Please correct the highlighted fields and submit the form again.
+</div>
+{% endif %}
 <h1>Create a Term</h1>
 
 <form action="{% url 'grading:term_creation' %}" method="post">
@@ -28,19 +36,22 @@
 
 
 </form>
-
-{% if success %}
-<h1>Term Created</h1>
-{% elif failure %}
-<h1>Error, Term Not Created</h1>
-{% endif %}
-
-<h2>Terms Currently In The System</h2>
+<hr />
 {% if terms.count %}
-    {% for term in terms %}
-            <li>{{ term }}</li>
-    {% endfor %}
-
+<table class="table table-hover table-responsive">
+    <thead><tr class="bg-primary">
+        <th>Term Name</th>
+        <th>Starts</th>
+        <th>Ends</th>
+    </tr></thead>
+{% for term in terms %}
+    <tr>
+        <td>{{ term }}</td>
+        <td>{{ term.start }}</td>
+        <td>{{ term.end }}</td>
+    </tr>
+{% endfor %}
+</table>
 {% else %}
     <h3>There Are No Terms Currently In The System, Add Some!</h3>
 {% endif %}

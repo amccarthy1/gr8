@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %} 
-
+<div class="alert alert-success" id="status-flash" style="display: none;">
+</div>
 <h1>Create a Course</h1>
 <form id="course-form" action="{% url 'grading:course_creation' %}" method="post">
     <table class="bootstrap-table">
@@ -59,9 +60,6 @@
     </tbody>
 </table>
 <button class="btn btn-md btn-primary" type="button" onclick="click_button()">Create Course</button>
-
-
-<h2 id="status"></h2>
 
 
 {% endblock content %}
