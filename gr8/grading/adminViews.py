@@ -1,6 +1,7 @@
-from grading.models import *
+from .models import *
 from .decorators import staff_required
 from .forms import *
+from django.forms.models import inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
@@ -160,16 +161,25 @@ def term_creation(request):
 
 @staff_required
 def create_course_code(request):
-    course_code_form = None
+    formset = None
+    CourseCodeInlineFormSet = inlineformset_factory(Course_Code, Prereq, fk_name="prereq_course", can_delete=False)
     created = None
     if (request.method == "POST"):
         course_code_form = CourseCodeForm(request.POST)
-        if course_code_form.is_valid():
+        formset = CourseCodeInlineFormSet(request.POST)
+        if formset.is_valid() and course_code_form.is_valid():
+            dummy = course_code_form.save(commit=False) #don't commit yet
+            formset = CourseCodeInlineFormSet(request.POST, instance=dummy)
             code = course_code_form.save()
+            formset.save()
             created = code.code
         else:
-            context = {"course_code_form" : course_code_form}
+            context = {"formset" : formset, "ccf": course_code_form}
             return render(request, "course_code_creation.html", context)
-    course_code_form = CourseCodeForm()
-    context = {"course_code_form" : course_code_form, "created": created}
+
+    # Render with a dummy instance
+    ccf = CourseCodeForm()
+    cc = Course_Code()
+    formset = CourseCodeInlineFormSet(instance=cc)
+    context = {"formset" : formset, "ccf": ccf, "created": created}
     return render(request, "course_code_creation.html", context)
