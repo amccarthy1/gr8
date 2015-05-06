@@ -280,6 +280,11 @@ class Course(models.Model):
 
         return timesStr
 
+    def get_prereqs(self):
+        return Prereq.objects.filter(prereq_course = self.course_code)
+
+    def credits(self):
+         return self.course_code.credits
 
 class Enrolled_In(models.Model):
     course = models.ForeignKey(Course)
@@ -300,7 +305,7 @@ class Enrolled_In(models.Model):
 
 class Prereq(models.Model):
     prereq_course = models.ForeignKey(Course_Code, related_name='prereq_set')
-    course = models.ForeignKey(Course_Code, related_name='_')
+    course = models.ForeignKey(Course_Code, related_name='_' , verbose_name='Optional Prereq')
 
     def __str__(self):
         return str(self.course)
