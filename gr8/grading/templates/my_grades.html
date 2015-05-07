@@ -36,10 +36,9 @@
         </table>
     </div>
 
-    <form action="{% url 'grading:transcript' %}" method="POST">
-        {% csrf_token %}
-        <input class="btn btn-primary" type="submit" name="generate_transcript" value="Generate Transcript">
-    </form>
+   <a class="btn btn-primary" target="_blank" href="{% url 'grading:transcript' %}">
+	Generate Transcript
+   </a>
 
 {% endif %}
 
