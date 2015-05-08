@@ -89,21 +89,29 @@ Course Info {{ course.desc_string }}
     <th colspan=4>
         <h1>Prerequisites</h1>
     </th>
-
-    <table id="prereq-table" class="table table-striped">
-        <tbody>
-        {% for prereq in course.get_prereqs %}
-            <tr>
-                <td class="item-name">Course: </td>
-                <td class="item-value ">{{ prereq.course.name }}</td>
-                <td class="item-name">Course ID:</td>
-                <td class="item-value">{{ prereq.course.code }}</td>
-                <td class="item-name">Credits:</td>
-                <td class="item-value">{{ prereq.course.credits }}</td>
+    <div class="table-responsive">
+    <table class="table table-hover" >
+        <thead>
+            <tr class="course-header bg-primary">
+                <th>Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
             </tr>
+        </thead>
+    <tbody>
+       {% for prereq in course.get_prereqs %}
+
+        <tr class="course-row" id="{{ course.id }}">
+            <td>{{ prereq.course.code }}</td>
+            <td>{{ prereq.course.name }}</td>
+            <td>{{ prereq.course.credits }}</td>
+        </tr>
+
         {% endfor %}
         </tbody>
     </table>
+</div>
+
 {% endif %}
 
 
