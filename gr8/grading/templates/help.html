@@ -6,6 +6,7 @@
         <h1>Help</h1>
     </div>
     <div class="panel-body">
+         <h2 id="student">Student User Guide</h2>
         <p text-indent="2em">
             As a student of a university using the Gr8ing System<sup>TM</sup>,
             you can perform the following actions:
@@ -20,14 +21,29 @@
                 <li>Generate an unofficial transcript from your course history</li>
             </ul>
         </p>
-        <h2 id="cart">Shopping Cart</h2>
+        <h3 id="cart">Shopping Cart</h3>
         <p text-indent="2em">
             In order to add a course to your shopping cart, navigate to the Current Courses
             page, click on the course you would like to add, and click the 'Add to Cart'
             button.  Once 
         <p>
-        {% if request.user.is_staff %} 
-        <p>
+
+        <!-- Begin Admin Section -->
+        {% if request.user.is_staff %}
+        <br/>
+         <h2 id="admin">Admin User Guide</h2>
+        <p text-indent="2em">
+            As and Admin of a university using the Gr8ing System<sup>TM</sup>,
+            you are given privileged access to functionality that the system
+            depends on to exist. Admins are responsible for tasks such as
+
+            <ul>
+                <li>Creating Users</li>
+                <li>Creating Rooms</li>
+                <li>Creating Creating Course Codes</li>
+                <li>Creating Courses</li>
+                <li>Creating Terms</li>
+            </ul>
 
         </p>
         {% endif %}

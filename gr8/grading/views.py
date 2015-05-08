@@ -451,3 +451,6 @@ def my_grades(request):
     }
 
     return render(request, "my_grades.html", context)
+
+def help(request):
+    return render(request, "help.html")

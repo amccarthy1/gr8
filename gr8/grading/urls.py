@@ -27,4 +27,6 @@ urlpatterns = patterns('',
     url(r'^ajax/', include(ajax_urls, namespace="ajax")), # Ajax functions defined in ajax.py
     url(r'^grades/$', my_grades, name="my_grades"),
 
+    url(r'^help/$', help, name="help"),
+
 )
