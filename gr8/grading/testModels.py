@@ -35,7 +35,7 @@ class CourseTests(TestCase):
 
         test_room = Room.objects.create(name="GOL-1550")
 
-        test_term_past = Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=365*2),  end_date = timezone.now() + - timedelta(days=305*2) )
+        test_term_past = Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=365*2),  end_date = timezone.now() - timedelta(days=305*2) )
         test_term = Term.objects.create(season = "Spring",year = 2015, start_date = timezone.now()  - timedelta(days=1),  end_date = timezone.now() + timedelta(days=60) )
         test_term_future = Term.objects.create(season = "Spring",year = 2020, start_date = timezone.now() + timedelta(days=365*5),  end_date = timezone.now() + timedelta(days=(365+65)*5))
 
@@ -212,7 +212,7 @@ class ProfileTests(TestCase):
         AMcCarthy = User.objects.create(username = "AMcCarthy", first_name = "Adam", last_name = "McCarthy", password = "admaniskindacool")
         Profile.objects.create(user = AMcCarthy, can_enroll = False)
 
-        test_term_past = Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=365*2),  end_date = timezone.now() + - timedelta(days=305*2) )
+        test_term_past = Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=365*2),  end_date = timezone.now() - timedelta(days=305*2) )
         test_term = Term.objects.create(season = "Spring",year = 2015, start_date = timezone.now()  - timedelta(days=1),  end_date = timezone.now() + timedelta(days=60) )
         test_term_future = Term.objects.create(season = "Spring",year = 2020, start_date = timezone.now() + timedelta(days=365*5),  end_date = timezone.now() + timedelta(days=(365+65)*5))
 
@@ -551,3 +551,16 @@ class ProfileTests(TestCase):
         enrolled_in = Enrolled_In.objects.filter(student = MWashburn, course = test_course)
 
         self.assertEqual(1, len(enrolled_in))
+
+class TermTest(TestCase):
+    def setUp(self):
+        Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=365*2),  end_date = timezone.now() - timedelta(days=305*2) )
+
+    def test_get_current_term_no_term(self):
+        self.assertEqual(None, Term.get_current_term())
+
+    def test_get_current_term_with_term(self):
+
+        test_term = Term.objects.create(season = "Spring",year = 2013, start_date = timezone.now() - timedelta(days=1),  end_date = timezone.now() + timedelta(days=60) )
+
+        self.assertEqual(test_term, Term.get_current_term())
