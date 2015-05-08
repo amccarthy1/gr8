@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h1>Help</h1>
+    </div>
+    <div class="panel-body">
+        <p text-indent="2em">
+            As a student of a university using the Gr8ing System<sup>TM</sup>,
+            you can perform the following actions:
+            <ul>
+                <li href="#cart">Add courses to your shopping cart</li>
+                <li>Enroll in courses</li>
+                <li>View your schedule graphically on a calendar</li>
+                <li>Check conflicts between courses in your shopping cart and
+                    your Google Calendar.</li>
+                <li>Export your course schedule to Google Calendar</li>
+                <li>View your grades for previous courses</li>
+                <li>Generate an unofficial transcript from your course history</li>
+            </ul>
+        </p>
+        <h2 id="cart">Shopping Cart</h2>
+        <p text-indent="2em">
+            In order to add a course to your shopping cart, navigate to the Current Courses
+            page, click on the course you would like to add, and click the 'Add to Cart'
+            button.  Once 
+        <p>
+        {% if request.user.is_staff %} 
+        <p>
+
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
