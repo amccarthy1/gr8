@@ -551,6 +551,14 @@ class ProfileTests(TestCase):
         enrolled_in = Enrolled_In.objects.filter(student = MWashburn, course = test_course)
 
         self.assertEqual(1, len(enrolled_in))
+		
+    def test_is_proff_when_no(self):
+        MWashburn = Profile.objects.get(user__username = "MWashburn")
+        self.assertFalse(MWashburn.is_proff())
+        
+    def test_is_proff_when_yes(self):
+        DKrutz = Profile.objects.get(user__username = "DKrutz")
+        self.assertTrue(DKrutz.is_proff())
 
 class TermTest(TestCase):
     def setUp(self):

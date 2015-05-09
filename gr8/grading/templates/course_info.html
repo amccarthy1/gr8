@@ -79,9 +79,11 @@ Course Info {{ course.desc_string }}
 
 {% if not can_enroll and not is_professor %}
     <p>You cannot enroll in courses!</p>
-{% elif is_enrolled %}
+{% elif is_enrolled and not is_professor %}
     <p>You are enrolled in this course.</p>
-{% elif is_in_cart %}
+{% elif is_professor %}
+<p>You are teaching this course.</p>
+{% elif is_in_cart and not is_professor %}
     <p>This course is on your bucket list.</p>
 {% endif %}
 <br/>

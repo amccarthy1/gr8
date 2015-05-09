@@ -28,80 +28,96 @@
             button.  Once 
         <p>
 
+        <!-- Begin Professor Section -->
+         {% if request.user.profile.is_proff %}
+            <br/>
+            <h2 id="admin">Professor User Guide</h2>
+            <p text-indent="2em">
+                Professors in the gr8ing system are profiles that have
+                been assigned to teach a course. The only extra functionality
+                that a professor has over a student is that when a professor
+                goes to the course information page for a course they are teaching
+                they see an enter grades button (if the course has at least one student).
+                When clicked a list of students that are enrolled in the course are shown
+                with an input field for their grade, the grades can be saved, and then modified again
+                if necessary. Professors may enroll in any class they want to and they will be
+                treated like a student.
+            </p>
+        
+        {% endif %}
         <!-- Begin Admin Section -->
         {% if request.user.is_staff %}
-        <br/>
-         <h2 id="admin">Admin User Guide</h2>
-        <p text-indent="2em">
-            As and Admin of a university using the Gr8ing System<sup>TM</sup>,
-            you are given privileged access to functionality that the system
-            depends on to exist. Admins can access the Admin dropdown in the header when logged in.
-			Admins are responsible for tasks such as
+            <br/>
+            <h2 id="admin">Admin User Guide</h2>
+            <p text-indent="2em">
+                As and Admin of a university using the Gr8ing System<sup>TM</sup>,
+                you are given privileged access to functionality that the system
+                depends on to exist. Admins can access the Admin dropdown in the header when logged in.
+                Admins are responsible for tasks such as
 
-            <ul>
-                <li>Creating Users</li>
-                <li>Creating Rooms</li>
-				<li>Creating Terms</li>
-                <li>Creating Creating Course Codes</li>
-                <li>Creating Courses</li>
-            </ul>
+                <ul>
+                    <li>Creating Users</li>
+                    <li>Creating Rooms</li>
+                    <li>Creating Terms</li>
+                    <li>Creating Creating Course Codes</li>
+                    <li>Creating Courses</li>
+                </ul>
 
-        </p>
-		<h3 id="creating_users">Creating Users</h3>
-        <p text-indent="2em">
-            Whenever a new user needs to be added to the system, an admin
-			must must create an account for the new user. The admin enters
-			the users personal information and creates a user name and password
-			for the account. The admin also has to set if the user can enroll 
-			in classes, if the checkbox is not checked the user cannot enroll in classes,
-			they can just view them and add them to their shopping cart.
-			For example if there was a financial hold on the student you would not want 
-			them to be able to enroll until the finical hold was resolved.
-        </p>
-		<h3 id="creating_rooms">Creating Rooms</h3>
-        <p text-indent="2em">
-            For classes to actually be held there has to be rooms to hold them in.
-			Admins must add every room in which classes are taught to the system. 
-			This will be a big effort when the system is new, but once all the rooms
-			are entered, they won't have to be entered again. After all the rooms have 
-			been entered, the create a room page will not be needed unless a new room
-			is added to the university and it needs to be added to the gr8ing system.
-        </p>
-		<h3 id="creating_terms">Creating Terms</h3>
-        <p text-indent="2em">
-			For the University to be able to hold classes in an organized
-			fashion, the define periods of time known as terms. These terms
-			have to be entered into the gr8ing system by the Admins so that 
-			courses can have a term they belong to. Terms are created by 
-			selecting the season and then setting a start and end date for the
-			term. 
-        </p>
-		<h3 id="creating_codes">Creating Course Codes</h3>
-        <p text-indent="2em">
-            For courses to exist there first has to be course codes in the system.
-			Course codes have a code such as "SWEN-261" or "MATH-182" these codes
-			are used as an abbreviation for the name of the course which can get
-			quite long. When creating a course code the admin also has to set the number
-			of credits the course is worth, and they can add any pre-requisites the course 
-			code has, for example "SWEN-261" is a pre-req of "SWEN-262". A course
-			can have between 0 and 3 pre-reqs so the fields can be left blank.
-        </p>
-		<h3 id="creating_courses">Creating Courses</h3>
-        <p text-indent="2em">
-			Once the Admins have created course codes, terms and rooms,
-			courses can be created. Each course can have 0 to N sections
-			and the gr8ing system auto increments the section number as 
-			courses with the same course code are created. The professor for the
-			class is set to a user in the system, or it can be left blank to 
-			leave the professor set as "Staff" if the professor for the class
-			has not yet be decided. When creating the course the Admin creates course sessions, 
-			which define where and when the course meets. This is done by selecting the
-			days of the week, the time (in military time) and the room 
-			the course will meet. There can be as many course sessions
-			as desired, allowing the course to meet on different days at 
-			different times. 
-        </p>
-		
+            </p>
+            <h3 id="creating_users">Creating Users</h3>
+            <p text-indent="2em">
+                Whenever a new user needs to be added to the system, an admin
+                must must create an account for the new user. The admin enters
+                the users personal information and creates a user name and password
+                for the account. The admin also has to set if the user can enroll 
+                in classes, if the checkbox is not checked the user cannot enroll in classes,
+                they can just view them and add them to their shopping cart.
+                For example if there was a financial hold on the student you would not want 
+                them to be able to enroll until the finical hold was resolved.
+            </p>
+            <h3 id="creating_rooms">Creating Rooms</h3>
+            <p text-indent="2em">
+                For classes to actually be held there has to be rooms to hold them in.
+                Admins must add every room in which classes are taught to the system. 
+                This will be a big effort when the system is new, but once all the rooms
+                are entered, they won't have to be entered again. After all the rooms have 
+                been entered, the create a room page will not be needed unless a new room
+                is added to the university and it needs to be added to the gr8ing system.
+            </p>
+            <h3 id="creating_terms">Creating Terms</h3>
+            <p text-indent="2em">
+                For the University to be able to hold classes in an organized
+                fashion, the define periods of time known as terms. These terms
+                have to be entered into the gr8ing system by the Admins so that 
+                courses can have a term they belong to. Terms are created by 
+                selecting the season and then setting a start and end date for the
+                term. 
+            </p>
+            <h3 id="creating_codes">Creating Course Codes</h3>
+            <p text-indent="2em">
+                For courses to exist there first has to be course codes in the system.
+                Course codes have a code such as "SWEN-261" or "MATH-182" these codes
+                are used as an abbreviation for the name of the course which can get
+                quite long. When creating a course code the admin also has to set the number
+                of credits the course is worth, and they can add any pre-requisites the course 
+                code has, for example "SWEN-261" is a pre-req of "SWEN-262". A course
+                can have between 0 and 3 pre-reqs so the fields can be left blank.
+            </p>
+            <h3 id="creating_courses">Creating Courses</h3>
+            <p text-indent="2em">
+                Once the Admins have created course codes, terms and rooms,
+                courses can be created. Each course can have 0 to N sections
+                and the gr8ing system auto increments the section number as 
+                courses with the same course code are created. The professor for the
+                class is set to a user in the system, or it can be left blank to 
+                leave the professor set as "Staff" if the professor for the class
+                has not yet be decided. When creating the course the Admin creates course sessions, 
+                which define where and when the course meets. This is done by selecting the
+                days of the week, the time (in military time) and the room 
+                the course will meet. There can be as many course sessions
+                as desired, allowing the course to meet on different days at 
+                different times. 
+            </p>            
         {% endif %}
     </div>
 </div>

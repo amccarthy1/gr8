@@ -151,6 +151,10 @@ class Profile(models.Model):
 
         return True
 
+    def is_proff(self):
+        teaching_list = Course.objects.filter(professor = self)
+        return len(teaching_list) > 0
+
 class Course_Code(models.Model):
     name = models.CharField('name', max_length=80)
     code = models.CharField('code', max_length=10, unique=True, )
