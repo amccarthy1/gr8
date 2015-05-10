@@ -4,6 +4,7 @@
 <h1>Help</h1>
 
 <div class="btn-group btn-group-justified" role="group">
+
     <a class="btn btn-primary" href="#student">Student User Guide</a>
     {% if request.user.profile.is_proff %}
     <a class="btn btn-primary" href="#professor">Professor User Guide</a>
@@ -11,6 +12,7 @@
     {% if request.user.is_staff %}
     <a class="btn btn-primary" href="#admin">Admin User Guide</a>
     {% endif %}
+
 </div>
 <br/>
 
@@ -19,7 +21,8 @@
         <h2>Student User Guide</h2>
     </div>
     <div class="panel-body">
-        <p text-indent="2em">
+
+        <p>
             As a student of a university using the Gr8ing System<sup>TM</sup>,
             you can perform the following actions:
             <ul>
@@ -33,12 +36,42 @@
                 <li>Generate an unofficial transcript from your course history</li>
             </ul>
         </p>
+
         <h3>Shopping Cart</h3>
-        <p text-indent="2em">
-            In order to add a course to your shopping cart, navigate to the Current Courses
-            page, click on the course you would like to add, and click the 'Add to Cart'
-            button.  Once 
         <p>
+            In order to add a course to your shopping cart, navigate to the Current Courses
+            page, click on the course you would like to add, and click the &#39Add to Cart&#39
+            button.  Once a course has been added to the shopping cart, it can be removed
+            by navigating to the shopping cart, clicking on the course, and pressing the
+            &#39Remove From Cart&#39 button.  You can also check the courses in your shopping
+            cart for conflicts with your Google Calendar on the Shopping Cart page by clicking
+            the &#39Check Conflicts Against Google Calendar&#39 button.
+        <p>
+
+        <h3>Enrollment</h3>
+        <p>
+            To enroll in a course, navigate to a course offered during the desired semester,
+            then click enroll. Alternativly, you can add courses to your shopping cart, then
+            enroll in all of them at the same time by clicking the &#39Enroll All&#39 button
+            on the Shopping Cart page. To drop a course, simply navigate to the page of the
+            course you wish to drop, then click the &#39Drop&#39 button.
+        </p>
+        
+        <h3>Schedule</h3>
+        <p>
+            To view your schedule, navigate to the &#39My Schedule&#39 page.  On the schedule
+            page, you can click on the course block in the schedule to go to the info page for
+            a course.  Additionally, you can post your course schedule to Google Calendar by
+            clicking the button at the bottom of the page.
+        </p>
+
+        <h3>Grades</h3>
+        <p>
+            To view your grades, go to the &#39My Grades&#39 page.  This page will show grades
+            for every course you have taken.  You can also view an unofficial transcript by
+            clicking the &#39Generate Transcript&#39 button at the bottom of the page.
+        </p>
+
     </div>
 </div>
 
@@ -49,7 +82,7 @@
         <h2>Professor User Guide</h2>
     </div>
     <div class="panel-body">
-        <p text-indent="2em">
+        <p>
             Professors in the gr8ing system are profiles that have
             been assigned to teach a course. The only extra functionality
             that a professor has over a student is that when a professor
@@ -72,7 +105,7 @@
         <h2>Admin User Guide</h2>
     </div>
     <div class="panel-body">
-        <p text-indent="2em">
+        <p>
             As and Admin of a university using the Gr8ing System<sup>TM</sup>,
             you are given privileged access to functionality that the system
             depends on to exist. Admins can access the Admin dropdown in the header when logged in.
@@ -88,7 +121,7 @@
 
         </p>
         <h3>Creating Users</h3>
-        <p text-indent="2em">
+        <p>
             Whenever a new user needs to be added to the system, an admin
             must must create an account for the new user. The admin enters
             the users personal information and creates a user name and password
@@ -99,7 +132,7 @@
             them to be able to enroll until the finical hold was resolved.
         </p>
         <h3>Creating Rooms</h3>
-        <p text-indent="2em">
+        <p>
             For classes to actually be held there has to be rooms to hold them in.
             Admins must add every room in which classes are taught to the system. 
             This will be a big effort when the system is new, but once all the rooms
@@ -108,7 +141,7 @@
             is added to the university and it needs to be added to the gr8ing system.
         </p>
         <h3>Creating Terms</h3>
-        <p text-indent="2em">
+        <p>
             For the University to be able to hold classes in an organized
             fashion, the define periods of time known as terms. These terms
             have to be entered into the gr8ing system by the Admins so that 
@@ -117,7 +150,7 @@
             term. 
         </p>
         <h3>Creating Course Codes</h3>
-        <p text-indent="2em">
+        <p>
             For courses to exist there first has to be course codes in the system.
             Course codes have a code such as "SWEN-261" or "MATH-182" these codes
             are used as an abbreviation for the name of the course which can get
@@ -127,7 +160,7 @@
             can have between 0 and 3 pre-reqs so the fields can be left blank.
         </p>
         <h3>Creating Courses</h3>
-        <p text-indent="2em">
+        <p>
             Once the Admins have created course codes, terms and rooms,
             courses can be created. Each course can have 0 to N sections
             and the gr8ing system auto increments the section number as 
